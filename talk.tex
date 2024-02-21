@@ -1,0 +1,35 @@
+\documentclass[aspectratio=169,handout]{beamer}
+
+\makeatletter
+\appto\input@path{{libs/awesome-beamer}, {libs/smile}}
+\makeatother
+
+\usepackage{fontspec}
+\setmonofont[
+	Path = ./libs/awesome-beamer/fonts/,
+	Scale = .9,
+	Extension = .ttf,
+	Contextuals=Alternate,
+	BoldFont={*-Bold},
+	UprightFont={*-Regular},
+]{Fira Code}
+\renewcommand\setmonofont[2][]{}
+
+\definecolor{forest}{HTML}{1a4301}
+\usetheme[english, color, coloraccent=forest]{awesome}
+
+\usepackage[duration=90]{pdfpc}
+\newcommand<>{\talknote}[1]{\only#2{\pdfpcnote{- #1}\relax}}
+
+\title{Lenses}
+\subtitle{Functional Programming II}
+\author{Lukas Pietzschmann}
+\email{lukas.pietzschmann@uni-ulm.de}
+\institute{Institute of Software Engineering and Programming Languages}
+\uni{Ulm University}
+\location{Ulm}
+\date\today
+
+\begin{document}
+\maketitle
+\end{document}
