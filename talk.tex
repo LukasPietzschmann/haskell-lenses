@@ -16,12 +16,22 @@
 \renewcommand\setmonofont[2][]{}
 
 \definecolor{forest}{HTML}{1a4301}
-\usetheme[english, color, coloraccent=forest]{awesome}
+\usetheme[english, color, coloraccent=forest, listings]{awesome}
 
 \addbibresource{refs.bib}
 
 \usepackage[duration=90]{pdfpc}
 \newcommand<>{\talknote}[1]{\only#2{\pdfpcnote{- #1}\relax}}
+
+\usepackage[verbatim]{lstfiracode}
+\lstdefinestyle{firastyleb}{style=FiraCodeStyle,style=smile@lst@base}
+\lstdefinestyle{firastylep}{style=FiraCodeStyle,style=smile@lst@plain}
+\lstset{
+	tabsize=4,
+	style=firastyleb,
+	apptoliterate={{=> }{{{=> }}}3} % for whatever reason, the space would otherwise be eaten
+}
+\newcommand\h[2][]{\lstinline[language=haskell,#1]{#2}}
 
 \title{Lenses}
 \subtitle{Functional Programming II}
