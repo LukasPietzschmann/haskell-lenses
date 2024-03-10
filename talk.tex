@@ -18,6 +18,8 @@
 \definecolor{forest}{HTML}{1a4301}
 \usetheme[english, color, coloraccent=forest]{awesome}
 
+\addbibresource{refs.bib}
+
 \usepackage[duration=90]{pdfpc}
 \newcommand<>{\talknote}[1]{\only#2{\pdfpcnote{- #1}\relax}}
 
@@ -32,4 +34,11 @@
 
 \begin{document}
 \maketitle
+
+\section{References}
+\defbibheading{bibliography}[\bibname]{}
+\begin{frame}[allowframebreaks]
+	\frametitle{References}
+	\printbibliography
+\end{frame}
 \end{document}
