@@ -4,21 +4,30 @@
 \appto\input@path{{libs/awesome-beamer}, {libs/smile}}
 \makeatother
 
+\usepackage[
+	backend=biber,
+	style=alphabetic
+]{biblatex}
+\usepackage[strict,autostyle]{csquotes}
+\nocite{*}
+\addbibresource{refs.bib}
+
 \usepackage{fontspec}
+\setsansfont[
+	Ligatures=TeX,
+	BoldFont={* Medium},
+]{Fira Sans}
 \setmonofont[
-	Path = ./libs/awesome-beamer/fonts/,
+	Path = ./fonts/,
 	Scale = .9,
 	Extension = .ttf,
 	Contextuals=Alternate,
 	BoldFont={*-Bold},
 	UprightFont={*-Regular},
 ]{Fira Code}
-\renewcommand\setmonofont[2][]{}
-
 \definecolor{forest}{HTML}{1a4301}
 \usetheme[english, color, coloraccent=forest, listings]{awesome}
 
-\addbibresource{refs.bib}
 
 \usepackage[duration=90]{pdfpc}
 \newcommand<>{\talknote}[1]{\only#2{\pdfpcnote{- #1}\relax}}
