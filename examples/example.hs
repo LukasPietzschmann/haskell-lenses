@@ -7,7 +7,7 @@ data Entry = Entry {
   value :: Value
 }
 data Value = Value {
-  curr :: Maybe String,
+  curr :: String,
   def  :: String
 }
 
@@ -18,13 +18,13 @@ instance Show Entry where
   show (Entry key value) = key ++ " -> " ++ show value
 
 instance Show Value where
-  show (Value Nothing defaultValue) = defaultValue
-  show (Value (Just actualValue) _) = actualValue
+  show (Value "" defaultValue) = defaultValue
+  show (Value actualValue _) = actualValue
 
 nvimConfig = File "~/.config/nvim/init.lua" [
-    Entry "expandtab" (Value Nothing "true"),
-    Entry "cmdheight" (Value (Just "0") "1"),
-    Entry "textwidth" (Value (Just "88") "")
+    Entry "expandtab" (Value "" "true"),
+    Entry "cmdheight" (Value "0" "1"),
+    Entry "textwidth" (Value "88" "")
   ]
 
 getEntry :: String -> File -> Entry
@@ -36,7 +36,7 @@ getCurrentValue = def . value
 setCurrentValue :: String -> Entry -> Entry
 setCurrentValue newValue entry = entry {
   value = (value entry) {
-    curr = Just newValue
+    curr = newValue
   }
 }
 
@@ -44,7 +44,7 @@ nvimConfig' = setCurrentValue "false" $ getEntry "expandtab" nvimConfig
 
 modifyCurrentValue :: (String -> String) -> Value -> Value
 modifyCurrentValue f value = value {
-  curr = f <$> curr value
+  curr = f $ curr value
 }
 
 modifyEntriesValue :: (Value -> Value) -> Entry -> Entry
