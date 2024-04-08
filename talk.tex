@@ -168,6 +168,21 @@
 	\lstinputlisting[language=myhaskell,firstline=45,lastline=58,basicstyle=\smile@lst@style@base\footnotesize]{examples/example.hs}
 \end{frame}
 
+\begin{frame}
+	\frametitle{Why do we need them}
+	Now, we can build our \h{Lens} abstraction
+	\inpuths examples/example.hs from 60 to 63;\bigskip
+
+	We need to \enquote{reimplement} the function composition:
+	\inpuths examples/example.hs from 65 to 69;
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Why do we need them}
+	Finally we can build lenses for our ADTs:\makeatletter\medskip
+	\lstinputlisting[language=myhaskell,firstline=71,lastline=86,basicstyle=\smile@lst@style@base\footnotesize]{examples/example.hs}
+\end{frame}
+
 \section{References}
 \defbibheading{bibliography}[\bibname]{}
 \begin{frame}[allowframebreaks]

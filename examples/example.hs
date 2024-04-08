@@ -56,3 +56,31 @@ modifyEntriesCurrentValue :: (String -> String) -> Entry -> Entry
 modifyEntriesCurrentValue = modifyEntriesValue . modifyCurrentValue
 
 setCurrentValue' = modifyEntriesCurrentValue . const
+
+data Lens s a = Lens {
+  get :: s -> a,
+  modify :: (a -> a) -> s -> s
+}
+
+compose :: Lens a b -> Lens b c -> Lens a c
+compose (Lens g m) (Lens g' m') = Lens {
+  get = g' . g,
+  modify = m . m'
+}
+
+currentValueL :: Lens Value String
+currentValueL = Lens {
+  get = curr,
+  modify = \f value -> value { curr = f $ curr value }
+}
+
+entryValueL :: Lens Entry Value
+entryValueL = Lens {
+  get = value,
+  modify = \f entry -> entry { value = f $ value entry }
+}
+
+entryCurrentValueL :: Lens Entry String
+entryCurrentValueL = entryValueL `compose` currentValueL
+
+setCurrentValue'' = modify entryCurrentValueL . const
