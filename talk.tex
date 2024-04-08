@@ -148,6 +148,17 @@
 	\frametitle{Why do we need them}
 	\inpuths examples/example.hs from 30 to 41;\medskip
 	Oof, this sucks. And it get's even worse the deeper the ADT gets!
+	\begin{tikzpicture}[o]
+		\node[anchor=west,yshift=8mm] at (current page.west) (A) {
+			\lstinputlisting[language=myhaskell,firstline=5,lastline=8,basicstyle=\smile@lst@style@base\tiny]{examples/example.hs}
+		};
+		\node[anchor=west,yshift=1.2cm] at (current page.west |- A) {
+			\lstinputlisting[language=myhaskell,firstline=1,lastline=4,basicstyle=\smile@lst@style@base\tiny]{examples/example.hs}
+		};
+		\node[anchor=west,yshift=-1.2cm] at (current page.west |- A) {
+			\lstinputlisting[language=myhaskell,firstline=9,lastline=12,basicstyle=\smile@lst@style@base\tiny]{examples/example.hs}
+		};
+	\end{tikzpicture}
 \end{frame}
 
 \section{References}
