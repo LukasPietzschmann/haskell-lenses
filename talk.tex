@@ -37,10 +37,15 @@
 \lstdefinestyle{firastylep}{style=FiraCodeStyle,style=smile@lst@plain}
 \lstset{
 	tabsize=4,
-	style=firastyleb,
-	apptoliterate={{=> }{{{=> }}}3} % for whatever reason, the space would otherwise be eaten
+	style=firastylep,
+	%apptoliterate={{=> }{{{=> }}}3} % for whatever reason, the space would otherwise be eaten
 }
-\newcommand\h[2][]{\lstinline[language=haskell,#1]{#2}}
+\lstdefinelanguage{myhaskell}{
+	language=haskell,
+	morekeywords={MonadReader,Getting,ASetter,Lens},
+}
+\newcommand\h[2][]{\lstinline[language=myhaskell,#1]{#2}}
+\lstnewenvironment{haskell}{\lstset{language=myhaskell}}{}
 
 \background{background.jpg}
 \title{Lenses}
