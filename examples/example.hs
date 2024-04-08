@@ -41,3 +41,18 @@ setCurrentValue newValue entry = entry {
 }
 
 nvimConfig' = setCurrentValue "false" $ getEntry "expandtab" nvimConfig
+
+modifyCurrentValue :: (String -> String) -> Value -> Value
+modifyCurrentValue f value = value {
+  curr = f <$> curr value
+}
+
+modifyEntriesValue :: (Value -> Value) -> Entry -> Entry
+modifyEntriesValue f entry = entry {
+  value = f $ value entry
+}
+
+modifyEntriesCurrentValue :: (String -> String) -> Entry -> Entry
+modifyEntriesCurrentValue = modifyEntriesValue . modifyCurrentValue
+
+setCurrentValue' = modifyEntriesCurrentValue . const
