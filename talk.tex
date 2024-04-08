@@ -74,36 +74,34 @@
 \setbeamercolor{footline}{fg=white,bg=m}
 \setbeamercolor{footlineright}{fg=white,bg=m}
 \def\qn#1{\textcolor{orange!80!black}{\textbf{#1}}}
-\begin{frame}
+\begin{frame}[t,fragile]
 	\frametitle{What are lenses}
 	\tikzset{q/.style={chamfered rectangle,draw,lw,chamfered rectangle xsep=2cm,fill=m,text=white}}
 	\tikzset{qa/.style={q,text width=0.4\textwidth}}
-	\begin{wide}
-		\begin{center}
-			\centerline{\h[morekeywords={forall}]{type Lens s t a b = forall f. Functor f => (a -> f b) -> s -> f t}}
-			\vskip5\bigskipamount
-			\begin{tikzpicture}[o,node distance=.5ex]
-				\draw[draw=none,top color=white,bottom color=m] (current page.west) rectangle ([yshift=1.8ex]current page.south east);
+	\begin{wide}\vspace{5mm}
+		\begin{haskell}
+			type Lens s t a b = forall f. Functor f => (a -> f b) -> s -> f t
 
-				\node[q] at ([yshift=-5mm]current page) (Q) {What is the purpose of a lens, according to the type above?};
-				\coordinate (AS) at ([yshift=-1.3cm]Q.south);
+			view :: MonadReader s m => Getting a s a -> m a
+			set  :: ASetter s t a b -> b -> s -> t
+		\end{haskell}
+		\begin{tikzpicture}[o,node distance=.5ex]
+			\draw[draw=none,top color=white,bottom color=m] (current page.west) rectangle ([yshift=1.8ex]current page.south east);
 
-				\node[qa,left=of AS,left] (A) {\scriptsize\qn{A:} A package for creating visualizations};
-				\node[qa,right=of AS,right] (B) {\scriptsize\qn{B:} A tool for handling nested ADTs};
+			\node[q] at ([yshift=-5mm]current page) (Q) {What is the purpose of a lens, according to the types above?};
+			\coordinate (AS) at ([yshift=-1.3cm]Q.south);
 
-				\node[qa,below=of A] (C) {\scriptsize\qn{C:} A framework for building UIs};
-				\node[qa,below=of B] (D) {\scriptsize\qn{D:} A package for simulating optical lenses};
+			\node[qa,left=of AS,left] (A) {\scriptsize\qn{A:} A package for creating visualizations};
+			\node[qa,right=of AS,right] (B) {\scriptsize\qn{B:} A tool for handling nested ADTs};
 
-				\draw[lw,short=-1pt] (A.east) to (B.west);
-				\draw[lw,short=-1pt] (C.east) to (D.west);
+			\node[qa,below=of A] (C) {\scriptsize\qn{C:} A framework for building UIs};
+			\node[qa,below=of B] (D) {\scriptsize\qn{D:} A package for simulating optical lenses};
 
-				\draw[lw,short=-1pt] (Q.west) to (Q.west -| current page.west);
-				\draw[lw,short=-1pt] (Q.east) to (Q.east -| current page.east);
+			\draw[lw,short=-1pt] (A.east) to (B.west);
+			\draw[lw,short=-1pt] (C.east) to (D.west);
 
-				\draw[lw,short=-1pt] (A.west) to (A.west -| current page.west);
-				\draw[lw,short=-1pt] (C.west) to (C.west -| current page.west);
-				\draw[lw,short=-1pt] (B.east) to (B.east -| current page.east);
-				\draw[lw,short=-1pt] (D.east) to (D.east -| current page.east);
+			\draw[lw,short=-1pt] (Q.west) to (Q.west -| current page.west);
+			\draw[lw,short=-1pt] (Q.east) to (Q.east -| current page.east);
 
 			\draw[lw,short=-1pt] (A.west) to (A.west -| current page.west);
 			\draw[lw,short=-1pt] (C.west) to (C.west -| current page.west);
