@@ -32,6 +32,8 @@
 \usepackage[duration=90]{pdfpc}
 \newcommand<>{\talknote}[1]{\only#2{\pdfpcnote{- #1}\relax}}
 
+\def\link #1 to #2;{\def\ULdepth{.5pt}\def\ULthickness{.1pt}\uline{\href{#2}{#1}}}
+
 \usepackage[verbatim]{lstfiracode}
 \lstdefinestyle{firastyleb}{style=FiraCodeStyle,style=smile@lst@base}
 \lstdefinestyle{firastylep}{style=FiraCodeStyle,style=smile@lst@plain}
@@ -46,6 +48,7 @@
 }
 \newcommand\h[2][]{\lstinline[language=myhaskell,#1]{#2}}
 \lstnewenvironment{haskell}{\lstset{language=myhaskell}}{}
+\def\inpuths #1 from #2 to #3;{\lstinputlisting[language=myhaskell,firstline=#2,lastline=#3]{#1}}
 
 \background{background.jpg}
 \title{Lenses}
