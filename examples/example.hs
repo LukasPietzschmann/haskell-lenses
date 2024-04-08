@@ -1,37 +1,43 @@
-data File  = File String [Entry]
-data Entry = Key String Value
-
-data Value = Str  { getStr  :: String }
-           | Int  { getInt  :: Int }
-           | List { getList :: [Value] }
-           | Map  { getMap  :: [(String, Value)] }
-
-instance Show Value where
-  show (Str s)  = s
-  show (Int i)  = show i
-  show (List l) = show l
-  show (Map m)  = show m
-
-instance Show Entry where
-  show (Key k v) = k ++ " = " ++ show v
+data File  = File {
+    name    :: String,
+    entries :: [Entry]
+}
+data Entry = Entry {
+    key   :: String,
+    value :: Value
+}
+data Value = Value {
+    actualValue  :: Maybe String,
+    defaultValue :: String
+}
 
 instance Show File where
-  show (File p s) = unlines $ show <$> s
+    show (File name entries) = unlines $ show <$> entries
+
+instance Show Entry where
+    show (Entry key value) = key ++ " -> " ++ show value
+
+instance Show Value where
+    show (Value Nothing defaultValue) = defaultValue
+    show (Value (Just actualValue) _) = actualValue
 
 nvimConfig = File "~/.config/nvim/init.lua" [
-    Key "line_numbers"   (Int 1),
-    Key "syntax"         (Str "on"),
-    Key "expandtab"      (Int 0),
-    Key "telescope-tabs" (Map [("enabled", Int 1)])
-  ]
+        Entry "expandtab" (Value Nothing "true"),
+        Entry "cmdheight" (Value (Just "0") "1"),
+        Entry "textwidth" (Value (Just "88") "")
+    ]
 
-disable :: File -> String -> File
-disable (File pa s) pl = File pa (helpMe <$> s)
-  where
-    helpMe (Key k v)
-      | k == pl   = Key k $ Map $ toggle <$> getMap v
-      | otherwise = Key k v
-    toggle ("enabled", _) = ("enabled", Int 0)
-    toggle x = x
+getEntry :: String -> File -> Entry
+getEntry k = head . filter ((==) k . key) . entries
 
-nvimConfig' = disable nvimConfig "telescope-tabs"
+getActualValue :: Entry -> String
+getActualValue = defaultValue . value
+
+setActualValue :: String -> Entry -> Entry
+setActualValue newValue entry = entry {
+    value = (value entry) {
+        actualValue = Just newValue
+    }
+}
+
+nvimConfig' = setActualValue "false" $ getEntry "expandtab" nvimConfig

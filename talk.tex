@@ -134,23 +134,20 @@
 	\frametitle{Why do we need them}
 	Imagine you want to parse configuration files in Haskell. To model them, you come up
 	with the following ADTs:\bigskip
-	\inpuths examples/example.hs from 1 to 7;
+	\inpuths examples/example.hs from 1 to 12;
 \end{frame}
 
 \begin{frame}[fragile]
 	\frametitle{Why do we need them}
-	Let's say we parsed a file into the following configuration:\medskip
-	\inpuths examples/example.hs from 21 to 26;\medskip
+	Let's say we parsed a file into the following configuration:\bigskip
+	\inpuths examples/example.hs from 24 to 28;\bigskip
 	Cool, isn't it. Now we want to work with this representation.
 \end{frame}
 
 \begin{frame}[fragile]
 	\frametitle{Why do we need them}
-	Let's try to disable the plugin \link telescope-tabs to
-	https://github.com/LukasPietzschmann/telescope-tabs;:\medskip
-	\inpuths examples/example.hs from 28 to 35;
-	\inpuths examples/example.hs from 37 to 37;\medskip
-	That's nice but not general enough. What if we want to change another key's value?
+	\inpuths examples/example.hs from 30 to 41;\medskip
+	Oof, this sucks. And it get's even worse the deeper the ADT gets!
 \end{frame}
 
 \section{References}
