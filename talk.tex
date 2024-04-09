@@ -37,6 +37,9 @@
 
 \def\link #1 to #2;{\def\ULdepth{.5pt}\def\ULthickness{.1pt}\uline{\href{#2}{#1}}}
 
+\usetikzlibrary{tikzmark}
+\def\m#1{\tikzmark{#1}}
+
 \usepackage[verbatim]{lstfiracode}
 \lstdefinestyle{firastyleb}{style=FiraCodeStyle,style=smile@lst@base}
 \lstdefinestyle{firastylep}{style=FiraCodeStyle,style=smile@lst@plain}
@@ -209,6 +212,40 @@
 		\item We always have to create \h{Lens} values
 		\item No support for polymorphic updates
 	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle[Revisited]{What are lenses}
+	Lenses are:
+	\begin{itemize}
+		\item A way to \emph{focus} on a part of a data structure
+	\end{itemize}\bigskip
+	Or more precisely:
+	\begin{itemize}
+		\item Just another abstraction
+		\item Functional Getters and Setters
+		\item Highly composable  and flexible
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle {A little history lesson}
+	Maybe steal some things from \url{https://smunix.github.io/github.com/ekmett/lens/wiki/History-of-Lenses.html}
+	\begin{itemize}[<+(1)->]\setlength\itemsep{.7em}
+		\item[\tikzmark{a}]
+		\item[\tikzmark{b}]
+		\item[\tikzmark{c}]
+		\item[\tikzmark{d}]
+	\end{itemize}
+	\begin{tikzpicture}[remember picture,overlay]
+		\coordinate (S) at ([shift={(-2mm,1.5mm)}]pic cs:a);
+		\coordinate (E) at ([shift={(-2mm,-1.1cm)}]pic cs:d);
+		\draw[-{Latex[round,accent]},lw,visible on=<4->] (S) -- (E);
+		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<4->] at (S) {};
+		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<5->] at ([shift={(-2mm,1.5mm)}]pic cs:b) {};
+		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<6->] at ([shift={(-2mm,1.5mm)}]pic cs:c) {};
+		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<7->] at ([shift={(-2mm,1.5mm)}]pic cs:d) {};
+	\end{tikzpicture}
 \end{frame}
 
 \section{How}
