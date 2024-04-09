@@ -15,6 +15,9 @@
 \nocite{*}
 \addbibresource{refs.bib}
 
+\usepackage{fontawesome5}
+\def\ergo{\raisebox{.5pt}{\scalebox{.8}{\faCaretRight}}}
+
 \usepackage{fontspec}
 \setsansfont[
 	Ligatures=TeX,
@@ -206,6 +209,51 @@
 		\item We always have to create \h{Lens} values
 		\item No support for polymorphic updates
 	\end{itemize}
+\end{frame}
+
+\section{How}
+
+\begin{frame}
+	\frametitle{Lens Laws}
+	Like with functors, applicatives, and monads, lenses \emph{should} follow some
+	rules:
+	\begin{enumerate}
+		\item Get-Put
+		\item Put-Get
+		\item Put-Put
+	\end{enumerate}
+	We'll look at them in a bit more detail.
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle[Get-Put]{Lens Laws}
+	If you modify something by changing its subpart to exactly what it was before
+	\ldots{} then nothing happens.\bigskip
+	\begin{haskell}
+		set entryCurrentValueL (mget entryCurrentValueL entry) entry == entry
+	\end{haskell}\bigskip
+	\ergo{} Our \h{Lens} should not modify the value or structure by itself.
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle[Put-Get]{Lens Laws}
+	If you modify something by inserting a particular subpart and then viewing the
+	result \ldots{} you'll get back exactly that subpart.\bigskip
+	\begin{haskell}
+		get entryCurrentValueL (set entryCurrentValueL "lol" entry) == "lol"
+	\end{haskell}\bigskip
+	\ergo{} The \h{Lens} should perform the update.
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle[Put-Put]{Lens Laws}
+	If you modify something by inserting a particular subpart \h{a}, and then modify it
+	again inserting a different subpart \h{b} \ldots{} it's exactly as if you only did
+	the second step.\bigskip
+	\begin{haskell}
+		set entryCurrentValueL "1" (set entryCurrentValueL "2" entry) == set entryCurrentValueL "1" entry
+	\end{haskell}\bigskip
+	\ergo{} Previous updated should not leave any traces.
 \end{frame}
 
 \section{References}
