@@ -40,7 +40,7 @@ setCurrentValue newValue entry = entry {
   }
 }
 
-nvimConfig' = setCurrentValue "false" $ getEntry "expandtab" nvimConfig
+newValue = setCurrentValue "false" $ getEntry "expandtab" nvimConfig
 
 modifyCurrentValue :: (String -> String) -> Value -> Value
 modifyCurrentValue f value = value {
@@ -84,3 +84,5 @@ entryCurrentValueL :: Lens Entry String
 entryCurrentValueL = entryValueL `compose` currentValueL
 
 setCurrentValue'' = modify entryCurrentValueL . const
+
+newValue'' = setCurrentValue'' "false" $ getEntry "expandtab" nvimConfig
