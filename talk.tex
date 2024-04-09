@@ -112,6 +112,18 @@
 			\draw[lw,short=-1pt] (D.east) to (D.east -| current page.east);
 		\end{tikzpicture}
 	\end{wide}
+	\begin{onlyenv}<2|handout:2>
+		\begin{tikzpicture}[o,node distance=0pt]
+			\filldraw[gray,opacity=0.8] (current page.south west) rectangle (current page.north east);
+			\node[draw=black,rnd,fill=white,lw,inner sep=3mm,text width=0.66\paperwidth] at (current page) (T) {
+				\begin{quote}
+					In Haskell, types provide a pretty good explanation of what a function does. Good luck deciphering lens types.
+				\end{quote}\par
+				\hfill Roman Cheplyaka
+			};
+			\node[below=of T] {\tiny\url{https://ro-che.info/articles/2014-04-24-lens-unidiomatic.html}};
+		\end{tikzpicture}
+	\end{onlyenv}
 \end{frame}
 \endgroup
 
