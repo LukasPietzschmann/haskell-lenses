@@ -130,6 +130,8 @@
 	We'll shortly see what they do and how we can use them.
 \end{frame}
 
+\section{Why}
+
 \begin{frame}
 	\frametitle{Why do we need them}
 	Imagine you want to parse configuration files in Haskell. To model them, you come up
@@ -162,14 +164,14 @@
 \end{frame}
 
 \begin{frame}[fragile]
-	\frametitle{Why do we need them}
+	\frametitle{Let's reinvent the lens}
 	Let's see, if we can improve this by adding some modifier
 	functions:\makeatletter\medskip
 	\lstinputlisting[language=myhaskell,firstline=45,lastline=58,basicstyle=\smile@lst@style@base\footnotesize]{examples/example.hs}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Why do we need them}
+	\frametitle{Let's reinvent the lens}
 	Now, we can build our \h{Lens} abstraction
 	\inpuths examples/example.hs from 60 to 63;\bigskip
 
@@ -178,9 +180,20 @@
 \end{frame}
 
 \begin{frame}[fragile]
-	\frametitle{Why do we need them}
-	Finally we can build lenses for our ADTs:\makeatletter\medskip
+	\frametitle{Let's reinvent the lens}
+	Finally, we can build lenses for our ADTs:\makeatletter\medskip
 	\lstinputlisting[language=myhaskell,firstline=71,lastline=86,basicstyle=\smile@lst@style@base\footnotesize]{examples/example.hs}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Let's reinvent the lens}
+	This definitely looks more flexible than what we had before. But there are still some
+	problems that want to be solved:\bigskip
+	\begin{itemize}
+		\item Still feels a bit clunky and boilerplate-heavy
+		\item We always have to create \h{Lens} values
+		\item No support for polymorphic updates
+	\end{itemize}
 \end{frame}
 
 \section{References}
