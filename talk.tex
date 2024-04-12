@@ -251,6 +251,28 @@
 \end{frame}
 
 \section{How}
+\subsection{A little Overview}
+
+\begin{frame}
+	\frametitle{A little Overview}
+	Lenses basically let us use two functions:
+	\begin{itemize}
+		\item \h{view :: Lens' a b -> a -> b}
+		\item \h{set :: Lens' a b -> b -> a -> a}
+	\end{itemize}\medskip
+	To use them, we need the actual \h{Lens}. It determines what part of the ADT we want to focus on.
+	\begin{itemize}
+		\item \h{_1 :: Lens' (a,b) a}
+		\item \h{_2 :: Lens' (a,b) b}
+	\end{itemize}\medskip
+	With all that in place, we can now combine the lens, an operation and data:
+	\begin{itemize}
+		\item \h{view _1 ("hi", "there")}\kern8pt\ergo\kern8pt\h{"hi"}
+		\item \h{set _2 "cool" ("FP is", "")}\kern8pt\ergo\kern8pt\h{("FP is", "cool")}
+	\end{itemize}
+\end{frame}
+
+\subsection{Lens Laws}
 
 \begin{frame}
 	\frametitle{Lens Laws}
