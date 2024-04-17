@@ -55,7 +55,11 @@ modifyEntriesValue f entry = entry {
 modifyEntriesCurrentValue :: (String -> String) -> Entry -> Entry
 modifyEntriesCurrentValue = modifyEntriesValue . modifyCurrentValue
 
+setCurrentValue' :: String -> Entry -> Entry
 setCurrentValue' = modifyEntriesCurrentValue . const
+
+getCurrentValue' :: Entry -> String
+getCurrentValue' = def . value
 
 data Lens s a = Lens {
   get :: s -> a,
@@ -67,6 +71,9 @@ compose (Lens g m) (Lens g' m') = Lens {
   get = g' . g,
   modify = m . m'
 }
+
+set :: Lens s a -> a -> s -> s
+set (Lens _ modify) = modify . const
 
 currentValueL :: Lens Value String
 currentValueL = Lens {
@@ -83,6 +90,16 @@ entryValueL = Lens {
 entryCurrentValueL :: Lens Entry String
 entryCurrentValueL = entryValueL `compose` currentValueL
 
-setCurrentValue'' = modify entryCurrentValueL . const
+setCurrentValue'' :: String -> Entry -> Entry
+setCurrentValue'' = set entryCurrentValueL
+
+getCurrentValue'' :: Entry -> String
+getCurrentValue'' = get entryCurrentValueL
 
 newValue'' = setCurrentValue'' "false" $ getEntry "expandtab" nvimConfig
+
+instance Eq Entry where
+  (==) e1 e2 = key e1 == key e2 && value e1 == value e2
+
+instance Eq Value where
+  (==) v1 v2 = curr v1 == curr v2 && def v1 == def v2

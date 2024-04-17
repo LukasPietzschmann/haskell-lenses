@@ -54,7 +54,11 @@
 }
 \newcommand\h[2][]{\lstinline[language=myhaskell,#1]{#2}}
 \lstnewenvironment{haskell}{\lstset{language=myhaskell}}{}
+\makeatletter
 \def\inpuths #1 from #2 to #3;{\lstinputlisting[language=myhaskell,firstline=#2,lastline=#3]{#1}}
+\def\inputhsxs #1 from #2 to #3;{\lstinputlisting[language=myhaskell,firstline=#2,lastline=#3,basicstyle=\smile@lst@style@base\footnotesize]{#1}}
+\def\inputhsxxs #1 from #2 to #3;{\lstinputlisting[language=myhaskell,firstline=#2,lastline=#3,basicstyle=\smile@lst@style@base\tiny]{#1}}
+\makeatother
 
 \background{background.jpg}
 \title{Lenses}
@@ -170,13 +174,13 @@
 	Oof, this sucks. And it get's even worse the deeper the ADT gets!
 	\begin{tikzpicture}[o]
 		\node[anchor=west,yshift=8mm] at (current page.west) (A) {
-			\lstinputlisting[language=myhaskell,firstline=5,lastline=8,basicstyle=\smile@lst@style@base\tiny]{examples/example.hs}
+			\inputhsxxs examples/example.hs from 5 to 8;
 		};
 		\node[anchor=west,yshift=1.2cm] at (current page.west |- A) {
-			\lstinputlisting[language=myhaskell,firstline=1,lastline=4,basicstyle=\smile@lst@style@base\tiny]{examples/example.hs}
+			\inputhsxxs examples/example.hs from 1 to 4;
 		};
 		\node[anchor=west,yshift=-1.2cm] at (current page.west |- A) {
-			\lstinputlisting[language=myhaskell,firstline=9,lastline=12,basicstyle=\smile@lst@style@base\tiny]{examples/example.hs}
+			\inputhsxxs examples/example.hs from 9 to 12;
 		};
 	\end{tikzpicture}
 \end{frame}
@@ -185,22 +189,41 @@
 	\frametitle{Let's reinvent the lens}
 	Let's see, if we can improve this by adding some modifier
 	functions:\makeatletter\medskip
-	\lstinputlisting[language=myhaskell,firstline=45,lastline=58,basicstyle=\smile@lst@style@base\footnotesize]{examples/example.hs}
+	\inputhsxs examples/example.hs from 45 to 56;
 \end{frame}
 
 \begin{frame}
 	\frametitle{Let's reinvent the lens}
+	We can use our modify-functions to implement a setter:
+	\inpuths examples/example.hs from 58 to 59;\bigskip
+
+	The getter is still fine:
+	\inpuths examples/example.hs from 61 to 62;\bigskip
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Let's reinvent the lens}
 	Now, we can build our \h{Lens} abstraction
-	\inpuths examples/example.hs from 60 to 63;\bigskip
+	\inputhsxs examples/example.hs from 64 to 67;\medskip
 
 	We need to \enquote{reimplement} the function composition:
-	\inpuths examples/example.hs from 65 to 69;
+	\inputhsxs examples/example.hs from 69 to 73;\medskip
+
+	For easier handling, we also define \h{set} as a little helper:
+	\inputhsxs examples/example.hs from 75 to 76;
 \end{frame}
 
 \begin{frame}[fragile]
 	\frametitle{Let's reinvent the lens}
 	Finally, we can build lenses for our ADTs:\makeatletter\medskip
-	\lstinputlisting[language=myhaskell,firstline=71,lastline=86,basicstyle=\smile@lst@style@base\footnotesize]{examples/example.hs}
+	\inputhsxs examples/example.hs from 78 to 91;
+\end{frame}
+
+\begin{frame}
+	\frametitle{Let's reinvent the lens}
+	Now we only have to plug our lens into \h{set}, \h{get}, or \h{modify}:
+	\inpuths examples/example.hs from 93 to 94;
+	\inpuths examples/example.hs from 96 to 97;
 \end{frame}
 
 \begin{frame}
@@ -291,7 +314,7 @@
 	If you modify something by changing its subpart to exactly what it was before
 	\ldots{} then nothing happens.\bigskip
 	\begin{haskell}
-		set entryCurrentValueL (mget entryCurrentValueL entry) entry == entry
+		set entryCurrentValueL (get entryCurrentValueL entry) entry == entry
 	\end{haskell}\bigskip
 	\ergo{} Our \h{Lens} should not modify the value or structure by itself.
 \end{frame}
