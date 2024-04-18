@@ -5,7 +5,7 @@
 \makeatother
 
 \definecolor{dred}{HTML}{501613}
-\usetheme[english, color, coloraccent=dred, secslide, listings]{awesome}
+\usetheme[english, color, coloraccent=dred, secslide, listings, footnote]{awesome}
 
 \usepackage[
 	backend=biber,
@@ -260,22 +260,52 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle {A little history lesson}
-	Maybe steal some things from \url{https://smunix.github.io/github.com/ekmett/lens/wiki/History-of-Lenses.html}
+	\frametitle[\cite{lenshist}]{A little history lesson}
 	\begin{itemize}[<+(1)->]\setlength\itemsep{.7em}
-		\item[\tikzmark{a}]
-		\item[\tikzmark{b}]
-		\item[\tikzmark{c}]
-		\item[\tikzmark{d}]
+		% \item[\tikzmark{a}] Jeremy Gibbons and Bruno Oliveira demonstrate that
+		% 	Traversals encode the Iterator pattern~\cite{gibbons2009}
+		\item[\tikzmark{b}] Luke Palmer creates a pattern he calls \emph{Accessors} to
+			ease stateful programming in Haskell~\cite{palmer2007game}. He uses C's
+			preprocessor to generate \h{readVal} and \h{writeVal} functions.\footnote{In
+			another blog post he then swaps out the preprocessor in favour of Template
+			Haskell.}
+		\item[\tikzmark{c}] Palmer generalizes his Accessors into something more like
+			today's lenses.~\cite{palmer2007acc}
+		\item[\tikzmark{d}] Twan van Laarhoven comes up with a novel way to express
+			lenses using the \h{Functor} class.~\cite{laarhoven2009} We call them
+			\emph{van Laarhoven lenses}.
 	\end{itemize}
 	\begin{tikzpicture}[remember picture,overlay]
-		\coordinate (S) at ([shift={(-2mm,1.5mm)}]pic cs:a);
-		\coordinate (E) at ([shift={(-2mm,-1.1cm)}]pic cs:d);
-		\draw[-{Latex[round,accent]},lw,visible on=<4->] (S) -- (E);
+		\coordinate (S) at ([shift={(-2mm,1.5mm)}]pic cs:b);
+		\coordinate (E) at ([shift={(-2mm,0cm)}]pic cs:d);
+		\draw[lw,visible on=<4->] (S) -- (E);
+		\draw[dashed,lw,visible on=<4->] (E) -- ([yshift=-1cm]E);
 		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<4->] at (S) {};
-		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<5->] at ([shift={(-2mm,1.5mm)}]pic cs:b) {};
+		% \node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<5->] at ([shift={(-2mm,1.5mm)}]pic cs:b) {};
 		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<6->] at ([shift={(-2mm,1.5mm)}]pic cs:c) {};
 		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<7->] at ([shift={(-2mm,1.5mm)}]pic cs:d) {};
+	\end{tikzpicture}
+\end{frame}
+
+\begin{frame}
+	\frametitle[\cite{lenshist}]{A little history lesson}
+	\begin{itemize}[<+(1)->]\setlength\itemsep{.7em}
+		\item[\tikzmark{e}] Russell O'Connor realises van Laarhoven lenses have always
+			supported polymorphic updates.~\cite{connor2012}
+		\item[\tikzmark{f}] Edward Kmett realises that you can put laws on the notion of
+			polymorphic updates.~\cite{kmett2012}
+		\item[\tikzmark{g}] Kmett pushed the \link first commit to
+			https://github.com/ekmett/lens/commit/c5c8e5ffeeccdd7ac78f758dfc5723c411443d78;
+			to the lens repository on \link GitHub to https://github.com/ekmett/lens;
+	\end{itemize}
+	\begin{tikzpicture}[remember picture,overlay]
+		\coordinate (S) at ([shift={(-2mm,1.5mm)}]pic cs:e);
+		\coordinate (E) at ([shift={(-2mm,-1.1cm)}]pic cs:g);
+		\draw[dashed,lw,visible on=<4->] ([yshift=7.5mm]S) -- (S);
+		\draw[-{Latex[round,accent]},lw,visible on=<4->] (S) -- (E);Turned Square
+		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<4->] at (S) {};
+		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<5->] at ([shift={(-2mm,1.5mm)}]pic cs:f) {};
+		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<5->] at ([shift={(-2mm,1.5mm)}]pic cs:g) {};
 	\end{tikzpicture}
 \end{frame}
 
