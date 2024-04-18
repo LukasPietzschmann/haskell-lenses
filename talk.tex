@@ -347,29 +347,29 @@
 
 \begin{frame}[fragile]
 	\frametitle[Get-Put]{Lens Laws}
-	If you modify something by changing its subpart to exactly what it was before
-	\ldots{} then nothing happens.\bigskip
+	If you modify something by changing its subpart to exactly what it was before,
+	nothing should happen.\bigskip
 	\begin{haskell}
 		set entryCurrentValueL (get entryCurrentValueL entry) entry == entry
 	\end{haskell}\bigskip
-	\ergo{} Our \h{Lens} should not modify the value or structure by itself.
+	\ergo{} Our lens should not modify the value or structure by itself.
 \end{frame}
 
 \begin{frame}[fragile]
 	\frametitle[Put-Get]{Lens Laws}
-	If you modify something by inserting a particular subpart and then viewing the
-	result \ldots{} you'll get back exactly that subpart.\bigskip
+	If you modify something by inserting a particular subpart and then view the result,
+	you'll get back exactly that subpart.\bigskip
 	\begin{haskell}
 		get entryCurrentValueL (set entryCurrentValueL "lol" entry) == "lol"
 	\end{haskell}\bigskip
-	\ergo{} The \h{Lens} should perform the update.
+	\ergo{} The Lens should perform the update.
 \end{frame}
 
 \begin{frame}[fragile]
 	\frametitle[Put-Put]{Lens Laws}
 	If you modify something by inserting a particular subpart \h{a}, and then modify it
-	again inserting a different subpart \h{b} \ldots{} it's exactly as if you only did
-	the second step.\bigskip
+	again inserting a different subpart \h{b}, it's exactly as if you only did the
+	second insertion.\bigskip
 	\begin{haskell}
 		set entryCurrentValueL "1" (set entryCurrentValueL "2" entry) == set entryCurrentValueL "1" entry
 	\end{haskell}\bigskip
