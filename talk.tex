@@ -122,18 +122,12 @@
 			\draw[lw,short=-1pt] (D.east) to (D.east -| current page.east);
 		\end{tikzpicture}
 	\end{wide}
-	\begin{onlyenv}<2|handout:2>
-		\begin{tikzpicture}[o,node distance=0pt]
-			\filldraw[gray,opacity=0.8] (current page.south west) rectangle (current page.north east);
-			\node[draw=black,rnd,fill=white,lw,inner sep=3mm,text width=0.66\paperwidth] at (current page) (T) {
-				\begin{quote}
-					In Haskell, types provide a pretty good explanation of what a function does. Good luck deciphering lens types.
-				\end{quote}\par
-				\hfill Roman Cheplyaka
-			};
-			\node[below=of T] {\tiny\url{https://ro-che.info/articles/2014-04-24-lens-unidiomatic.html}};
-		\end{tikzpicture}
-	\end{onlyenv}
+	\begin{modal}<2|handout:2>
+		\begin{quote}
+			In Haskell, types provide a pretty good explanation of what a function does. Good luck deciphering lens types.
+		\end{quote}\par
+		\hfill Roman Cheplyaka
+	\end{modal}
 \end{frame}
 \endgroup
 
@@ -226,7 +220,7 @@
 	\inpuths examples/example.hs from 96 to 97;
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
 	\frametitle{Let's reinvent the lens}
 	This definitely looks more flexible than what we had before. But there are still some
 	problems:\bigskip
@@ -236,6 +230,18 @@
 		\item No support for polymorphic updates
 	\end{itemize}\bigskip
 	We will later see how they can be solved!
+	\begin{modal}<2|handout:2>[\footnotesize Polymorphic Update]
+		\begin{haskell}
+			data Pair a b = Pair {e1 :: a, e2 :: b}
+
+			p :: Pair Int String
+			p = Pair 420 "is fun"
+
+			p { e1 = "FP" }  §\ergo\texttt{~~~Pair \{ e1 = "FP", e2 = "is fun" \}}§
+		\end{haskell}\bigskip
+		\ergo{} Notice that the type has changed from \h{Pair Int String} to \h{Pair
+		String String}. This is what we call \emph{polymorphic update}.
+	\end{modal}
 \end{frame}
 
 \begin{frame}
