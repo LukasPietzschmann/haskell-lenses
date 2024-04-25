@@ -40,6 +40,8 @@
 \usetikzlibrary{tikzmark}
 \def\m#1{\tikzmark{#1}}
 
+\usepackage{emoji}
+
 \usepackage[verbatim]{lstfiracode}
 \lstdefinestyle{firastyleb}{style=FiraCodeStyle,style=smile@lst@base}
 \lstdefinestyle{firastylep}{style=FiraCodeStyle,style=smile@lst@plain}
@@ -374,6 +376,26 @@
 		set entryCurrentValueL "1" (set entryCurrentValueL "2" entry) == set entryCurrentValueL "1" entry
 	\end{haskell}\bigskip
 	\ergo{} Previous updated should not leave any traces.
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Do I really have to follow them?}
+	\begin{itemize}
+		\item Yes, you should! Otherwise your lenses might behave weird.
+	\end{itemize}\medskip
+	\begin{itemize}
+		\item But, we can get around them
+		\item In fact, we can get around the whole process of creating a lens by
+			hand~\emoji{star-struck}
+		\item You remember Template-Haskell, do you?
+	\end{itemize}\bigskip
+	\begin{haskell}
+		{-# LANGUAGE TemplateHaskell #-}
+
+		data Value = Value { curr :: String, def :: String }
+
+		makeLenses ''Value
+	\end{haskell}
 \end{frame}
 
 \section{References}
