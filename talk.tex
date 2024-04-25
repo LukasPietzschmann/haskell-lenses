@@ -527,6 +527,71 @@
 	\end{modal}
 \end{frame}
 
+\section{More goodies}
+\subsection{Prisms}
+
+\begin{frame}[fragile]
+	\frametitle{Prisms}
+	\begin{columns}[c]
+		\begin{column}{0.45\textwidth}
+			Lenses reference something that \emph{always} exists.
+		\end{column}
+		\begin{column}{0.45\textwidth}
+			Prisms reference something that \emph{may} exist.
+		\end{column}
+	\end{columns}\bigskip
+	\inpuths examples/prism.hs from 5 to 9;
+	\begin{haskell}
+		meal1 ^? _MainCourse . _2 . _Desert §\ergo~\texttt{Just "Pudding"}§
+		meal2 ^? _MainCourse . _2 . _Desert §\ergo~\texttt{Nothing}§
+	\end{haskell}
+	\begin{haskell}
+		meal1 &  _MainCourse . _2 . _Desert .~ "Yogurt"
+	\end{haskell}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Prisms}
+	\begin{itemize}
+		\item We already used a prism: remember \h{_last}?
+		\item Functions that are prefixed by an underscore are prisms
+		\item We can usually use them just like lenses (there's just a lillte \h{Maybe} in the way)
+	\end{itemize}\bigskip
+	Imagine writing
+	\begin{haskell}
+		case v of
+			MainCouse _ (Desert d) -> MainCourse {
+				desert = Desert "Yogurt" }
+			_ -> v
+	\end{haskell}\medskip
+	instead of \h{meal1 &  _MainCourse . _2 . _Desert .~ "Yogurt"}
+\end{frame}
+
+\subsection{Traversals}
+\begin{frame}
+	\frametitle{Traversals}
+	\begin{columns}[c]
+		\begin{column}{0.45\textwidth}
+			Lenses reference something that \emph{always} exists.
+		\end{column}
+		\begin{onlyenv}<1|handout:0>
+		\begin{column}{0.45\textwidth}
+			Prisms reference something that \emph{may} exist.
+		\end{column}
+		\end{onlyenv}
+		\begin{onlyenv}<2-|handout:1->
+		\begin{column}{0.45\textwidth}
+			Traversals reference \emph{many things} that \emph{may} exist.
+		\end{column}
+		\end{onlyenv}
+	\end{columns}\bigskip
+\end{frame}
+
+\subsection{Isos}
+\begin{frame}
+	\frametitle{Isos}
+\end{frame}
+
 \section{References}
 \defbibheading{bibliography}[\bibname]{}
 
