@@ -399,6 +399,113 @@
 	\inpuths examples/example2.hs from 1 to 11;
 \end{frame}
 
+\subsection{The actual Package}
+
+\begin{frame}
+	\frametitle{The lens Package}
+	\begin{itemize}
+		\item Until now, we have only used \h{view} and \h{set}
+		\item But there are actually a lot more functions and operators
+		\item I mean a loooooooooooooooooot, easily over 100
+		\item Let's try to find a pattern in their names and write some nice short code
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{The lens Package}
+	\begin{wide}
+	\begin{columns}[c]
+		\begin{column}{0.45\textwidth}
+			Operators beginning with \h{^}
+			\begin{haskell}
+				Value "c" "d" ^. def §\ergo~\texttt{"d"}§
+				Right 42 ^? _Left §\ergo~\texttt{Nothing}§
+			\end{haskell}
+			are like \h{view}.
+		\end{column}
+		\begin{column}{0.45\textwidth}
+			Operators ending in \texttt{\~}
+			\begin{haskell}
+				(_2 .~ 3) (0, 0) §\ergo~\texttt{(0, 3)}§
+				(_2 +~ 3) (0, 39) §\ergo~\texttt{(0, 42)}§
+			\end{haskell}
+			are like \h{set}.
+		\end{column}
+	\end{columns}\bigskip
+	Writing \h{lens .~ value & adt} every time is not very nice. But as always, there's
+		a special operator to our rescue: \h{& :: a -> (a -> b) -> b}.
+	\end{wide}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{The lens Package}
+	With this knowledge aquired, we can finally write concise haskell-code:
+	\begin{haskell}
+		(6, 2) & both *~ 7 §\ergo~\texttt{(42, 14)}§
+	\end{haskell}\medskip
+	\begin{haskell}
+		l = entries . _last . value .curr
+		v = config ^?! l §\ergo~\texttt{"88"}§
+		config & l .~ v ++ "0" §\ergo~\texttt{"880"}§
+		over l (++"0") config §\ergo~\texttt{"880"}§
+	\end{haskell}\medskip
+	\begin{haskell}
+		(0, "upd.") & _1 .~ "poly." §\ergo~\texttt{("poly.", "upd.")}§
+	\end{haskell}
+\end{frame}
+
+% \begin{frame}
+% 	\frametitle{The lens Package}
+% 	\begin{description}
+% 		\item[\h{view}] \h{v ^. l}
+% 		\item[\h{set}] \h{v & l .~ x}
+% 		\item[\h{set Just}] \h{v & l ?~ mx}
+% 		\item[\h{incr}] \h{v & l +~ n}
+% 		\item[\h{append}] \h{v & l <>~ x}
+% 	\end{description}
+% \end{frame}
+
+\tikzset{b/.style={arrow,short=1mm,draw=green}}
+\tikzset{c/.style={arrow,short=1mm,draw=gray,dashed}}
+\begin{frame}
+	\frametitle[Gotchas]{The lens Package}
+	You might have notices, that lenses compose backwards:\par\bigskip
+	\begin{center}
+	\begin{tikzpicture}[node distance=7mm]
+		\node[roundednode] (A) {\strut\h{entries}};
+		\node[roundednode,right=of A] (B) {\strut\h{_last}};
+		\node[roundednode,right=of B] (C) {\strut\h{value}};
+		\node[roundednode,right=of C] (D) {\strut\h{curr}};
+
+		\draw[b] (A) to (B);
+		\draw[b] (B) to (C);
+		\draw[b] (C) to (D);
+
+		\draw[c] (D.south) to[bend left] (C.south);
+		\draw[c] (C.south) to[bend left] (B.south);
+		\draw[c] (B.south) to[bend left] (A.south);
+	\end{tikzpicture}
+	\end{center}\par\medskip
+	This makes it weird for FP-enjoyers, but intuitive for OOP-weirdos.\par
+	The same applies for all kinds of operators:\par
+	\begin{center}
+		\begin{tabular}{c|c}
+			lens & Haskell\\
+			\hline\hline
+			\h{5 & (+1)} & \h{(+1) $ 5}\\
+			\h{Just 5 <&> (+1)} & \h{(+1) <$> (Just 5)}\\
+		\end{tabular}
+	\end{center}
+	\begin{modal}<2|handout:2>
+		\begin{quote}
+			Backward composition of lenses. It’s a minor issue, and I wouldn’t mention
+			it if it wasn’t a great demonstration of how lens goes against the
+			conventions of Haskell.
+		\end{quote}\par
+		\hfill Roman Cheplyaka
+	\end{modal}
+\end{frame}
+
 \section{References}
 \defbibheading{bibliography}[\bibname]{}
 
