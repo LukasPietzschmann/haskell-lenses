@@ -21,7 +21,7 @@ instance Show Value where
   show (Value "" defaultValue) = defaultValue
   show (Value actualValue _) = actualValue
 
-nvimConfig = File "~/.config/nvim/init.lua" [
+config = File "~/.config/nvim/init.lua" [
     Entry "expandtab" (Value "" "true"),
     Entry "cmdheight" (Value "0" "1"),
     Entry "textwidth" (Value "88" "")
@@ -40,7 +40,7 @@ setCurrentValue newValue entry = entry {
   }
 }
 
-newValue = setCurrentValue "false" $ getEntry "expandtab" nvimConfig
+newValue = setCurrentValue "false" $ getEntry "expandtab" config
 
 modifyCurrentValue :: (String -> String) -> Value -> Value
 modifyCurrentValue f value = value {
@@ -96,7 +96,7 @@ setCurrentValue'' = set entryCurrentValueL
 getCurrentValue'' :: Entry -> String
 getCurrentValue'' = get entryCurrentValueL
 
-newValue'' = setCurrentValue'' "false" $ getEntry "expandtab" nvimConfig
+newValue'' = setCurrentValue'' "false" $ getEntry "expandtab" config
 
 instance Eq Entry where
   (==) e1 e2 = key e1 == key e2 && value e1 == value e2
