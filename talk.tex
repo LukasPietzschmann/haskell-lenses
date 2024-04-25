@@ -222,6 +222,27 @@
 	\inpuths examples/example.hs from 96 to 97;
 \end{frame}
 
+\begin{frame}
+	\frametitle{Let's reinvent the lens}
+	\color{red}\bfseries Play GHC and evaluate an expression step by step
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Let's reinvent the lens}
+	Puh, that was kinda complicated. But again, imagine you had to write\par\medskip
+	\begin{haskell}
+		let f = _foo v
+			b = _bar f
+			z = _baz b in
+		v { _foo = f {
+				_bar = b {
+					_baz = z + 1 } } }
+	\end{haskell}\medskip
+	instead of \h{v & foo.bar.baz +~ 1}\par\bigskip
+	We can now think \enquote{How can traverse through this?} instead of \enquote{How do
+	I un- and repack all of this?}.
+\end{frame}
+
 \begin{frame}[fragile]
 	\frametitle{Let's reinvent the lens}
 	This definitely looks more flexible than what we had before. But there are still some
