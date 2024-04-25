@@ -378,7 +378,7 @@
 	\ergo{} Previous updated should not leave any traces.
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}
 	\frametitle{Do I really have to follow them?}
 	\begin{itemize}
 		\item Yes, you should! Otherwise your lenses might behave weird.
@@ -388,14 +388,12 @@
 		\item In fact, we can get around the whole process of creating a lens by
 			hand~\emoji{star-struck}
 		\item You remember Template-Haskell, do you?
-	\end{itemize}\bigskip
-	\begin{haskell}
-		{-# LANGUAGE TemplateHaskell #-}
+	\end{itemize}
+\end{frame}
 
-		data Value = Value { curr :: String, def :: String }
-
-		makeLenses ''Value
-	\end{haskell}
+\begin{frame}
+	\frametitle{Do I really have to follow them?}
+	\inpuths examples/example2.hs from 1 to 11;
 \end{frame}
 
 \section{References}
