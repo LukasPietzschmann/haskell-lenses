@@ -245,14 +245,15 @@
 
 \begin{frame}[fragile]
 	\frametitle{Let's reinvent the lens}
-	This definitely looks more flexible than what we had before. But there are still some
+	Our solution looks more flexible than what we had before. But there are still some
 	problems:\bigskip
 	\begin{itemize}
 		\item Still feels a bit clunky and boilerplate-heavy
 		\item We always have to create \h{Lens} values
 		\item No support for polymorphic updates
 	\end{itemize}\bigskip
-	We will later see how they can be solved!
+	It's (obviously) not impossible to overcome these limitations, but we'll skip this
+	for now.
 	\begin{modal}<2|handout:2>[\footnotesize Polymorphic Update]
 		\begin{haskell}
 			data Pair a b = Pair {e1 :: a, e2 :: b}
@@ -406,11 +407,11 @@
 	\frametitle{Do I really have to follow them?}
 	\begin{itemize}
 		\item Yes, you should! Otherwise your lenses might behave weird.
-	\end{itemize}\medskip
+	\end{itemize}\bigskip
 	\begin{itemize}
 		\item But, we can get around them
 		\item In fact, we can get around the whole process of creating a lens by
-			hand~\emoji{star-struck}
+			hand
 		\item You remember Template-Haskell, do you?
 	\end{itemize}
 \end{frame}
@@ -427,8 +428,10 @@
 	\begin{itemize}
 		\item Until now, we have only used \h{view} and \h{set}
 		\item But there are actually a lot more functions and operators
-		\item I mean a loooooooooooooooooot, easily over 100
-		\item Let's try to find a pattern in their names and write some nice short code
+		\item I mean a loooooooooooooooooot; easily over 100
+	\end{itemize}\bigskip
+	\begin{itemize}
+		\item Let's try to find a pattern in their names
 	\end{itemize}
 \end{frame}
 
@@ -453,8 +456,8 @@
 			are like \h{set}.
 		\end{column}
 	\end{columns}\bigskip
-	Writing \h{lens .~ value & adt} every time is not very nice. But as always, there's
-		a special operator to our rescue: \h{& :: a -> (a -> b) -> b}.
+	Writing \h{lens .~ value $ adt} every time is not very nice. But as always, there's
+	a special operator to our rescue: \h{& :: a -> (a -> b) -> b}.
 	\end{wide}
 \end{frame}
 
@@ -465,7 +468,7 @@
 		(6, 2) & both *~ 7 §\ergo~\texttt{(42, 14)}§
 	\end{haskell}\medskip
 	\begin{haskell}
-		l = entries . _last . value .curr
+		l = entries . _last . value . curr
 		v = config ^?! l §\ergo~\texttt{"88"}§
 		config & l .~ v ++ "0" §\ergo~\texttt{"880"}§
 		over l (++"0") config §\ergo~\texttt{"880"}§
@@ -490,7 +493,7 @@
 \tikzset{c/.style={arrow,short=1mm,draw=gray,dashed}}
 \begin{frame}
 	\frametitle[Gotchas]{The lens Package}
-	You might have notices, that lenses compose backwards:\par\bigskip
+	You might have notices that lenses compose backwards:\par\bigskip
 	\begin{center}
 	\begin{tikzpicture}[node distance=7mm]
 		\node[roundednode] (A) {\strut\h{entries}};
@@ -553,9 +556,10 @@
 \begin{frame}[fragile]
 	\frametitle{Prisms}
 	\begin{itemize}
-		\item We already used a prism: remember \h{_last}?
 		\item Functions that are prefixed by an underscore are prisms
-		\item We can usually use them just like lenses (there's just a lillte \h{Maybe} in the way)
+		\item We already used a prism: remember \h{_last}?
+		\item We can usually use them like a normal lens (there's just a lillte
+			\h{Maybe} in the way)
 	\end{itemize}\bigskip
 	Imagine writing
 	\begin{haskell}
