@@ -26,7 +26,7 @@ jobs:
           branch: "build"
           github_token: ${{ secrets.GITHUB_TOKEN }}
           force: true
-  build_slides:
+  build_exercise:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Git repository
