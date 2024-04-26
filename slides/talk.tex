@@ -1,7 +1,7 @@
 \documentclass[aspectratio=169,handout]{beamer}
 
 \makeatletter
-\appto\input@path{{libs/awesome-beamer}, {libs/smile}}
+\appto\input@path{{../libs/awesome-beamer}, {../libs/smile}}
 \makeatother
 
 \definecolor{dred}{HTML}{501613}
@@ -70,7 +70,7 @@
 \institute{Institute of Software Engineering and Programming Languages}
 \uni{Ulm University}
 \location{Ulm}
-\date{May 24$^\text{th}$, 2024}
+\date{May 13$^\text{th}$, 2024}
 
 \addtobeamertemplate{title page}{}{
 \tikz[o]\node[anchor=south east,outer sep=0pt] at (current page.south east)
@@ -346,17 +346,52 @@
 		\item \h{view :: Lens' a b -> a -> b}
 		\item \h{set :: Lens' a b -> b -> a -> a}
 	\end{itemize}\medskip
-	To use them, we need the actual \h{Lens}. It determines what part of the ADT we want to focus on.
+	To use them, we need the actual \h{Lens}. It determines what part of the structure
+	we want to focus on.
 	\begin{itemize}
 		\item \h{_1 :: Lens' (a,b) a}
 		\item \h{_2 :: Lens' (a,b) b}
 	\end{itemize}\medskip
-	With all that in place, we can now combine the lens, an operation and data:
+	With all that in place, we can now combine the operation with a lens (or a
+	combination of lenses) and data:
 	\begin{itemize}
 		\item \h{view _1 ("hi", "there")}\kern8pt\ergo\kern8pt\h{"hi"}
 		\item \h{set _2 "cool" ("FP is", "")}\kern8pt\ergo\kern8pt\h{("FP is", "cool")}
 	\end{itemize}
 \end{frame}
+
+% \def\mybox#1{\fcolorbox{#1}{#1!5}{\phantom{ssss}}}
+% \tikzset{a/.style n args={1}{roundednode,minimum width=1.5cm,minimum height=1cm,draw=#1,fill=#1!5}}
+% \begin{frame}
+% 	\frametitle{A little Overview}
+% 	\begin{wide}
+% 	\begin{center}
+% 	\begin{tikzpicture}
+% 		\node[a=blue] (L) {};
+% 		\node[a=red,right=of L] (O) {};
+% 		\node[a=green,right=of O] (D) {};
+% 	\end{tikzpicture}
+% 	\end{center}
+% 	\begin{columns}[c]
+% 		\begin{column}{0.45\textwidth}
+% 			% \begin{beamerbox}{blue}{Operation}
+% 				\h{view :: Lens' a b -> a -> b}\\
+% 				\h{set :: Lens' a b -> b -> a -> a}
+% 			% \end{beamerbox}
+% 			% \begin{beamerbox}{red}{Lens}
+% 				\h{_1 :: Lens' (a,b) a}\\
+% 				\h{_2 :: Lens' (a,b) b}
+% 			% \end{beamerbox}
+% 		\end{column}
+% 		\begin{column}{0.45\textwidth}
+% 			% \begin{beamerbox}{green}{Data}
+% 				\h{view _1 ("hi", "there")}\kern8pt\ergo\kern8pt\h{"hi"}\\
+% 				\h{set _2 "cool" ("FP is", "")}\kern8pt\ergo\kern8pt\h{("FP is", "cool")}
+% 			% \end{beamerbox}
+% 		\end{column}
+% 	\end{columns}
+% 	\end{wide}
+% \end{frame}
 
 \subsection{Lens Laws}
 
@@ -531,6 +566,12 @@
 \end{frame}
 
 \section{More goodies}
+
+\subsection{Virtual lenses}
+\begin{frame}
+	\frametitle{Virtual lenses}
+\end{frame}
+
 \subsection{Prisms}
 
 \begin{frame}[fragile]
