@@ -5,6 +5,20 @@
 
 \documentclass{exercise}
 
+\usepackage{fontspec}
+\setsansfont[
+	Ligatures=TeX,
+	BoldFont={* Medium},
+]{Fira Sans}
+\setmonofont[
+	Path = ./fonts/,
+	Scale = .9,
+	Extension = .ttf,
+	Contextuals=Alternate,
+	BoldFont={*-Bold},
+	UprightFont={*-Regular},
+]{Fira Code}
+
 \title{Functional Programming II}
 \author{Lukas Pietzschmann}
 \email{lukas.pietzschmann@uni-ulm.de}

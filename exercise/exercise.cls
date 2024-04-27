@@ -8,7 +8,6 @@
 
 
 \RequirePackage[color,tikz]{smile}
-\RequirePackage{fontspec}
 \RequirePackage{microtype}
 \RequirePackage{etoolbox}
 \RequirePackage[english]{babel}
@@ -74,10 +73,6 @@
 \newkomafont{topic}{\normalsize\slshape}
 \newkomafont{institute}{\footnotesize\slshape}
 \newkomafont{uni}{\footnotesize\slshape}
-
-\setmainfont{FiraSans}
-\setmonofont{Fira Code}[Contextuals=Alternate]
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
