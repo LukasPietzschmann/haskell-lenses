@@ -11,13 +11,15 @@ jobs:
       - name: Compile Slides
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: slides/talk.tex
+          working_directory: slides
+          root_file: talk.tex
           latexmk_use_lualatex: true
           texlive_version: 2023
       - name: Compile Exercise
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: exercise/main.tex
+          working_directory: exercise
+          root_file: main.tex
           latexmk_use_lualatex: true
           texlive_version: 2023
       - name: Commit PDF
