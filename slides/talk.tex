@@ -82,7 +82,8 @@
 	morekeywords={MonadReader,Getting,ASetter,Lens},
 }
 \newcommand\hn[2][]{\lstinline[language=myhaskell,#1]{#2}}
-\newcommand\h[2][]{\tikz[anchor=base,baseline]\node[inner sep=0.3333em,rnd,fill=lightgray!50,anchor=base,baseline=] {\hn[#1]{#2}};}
+\def\inlineblock#1{\tikz[anchor=base,baseline]\node[inner sep=0.3333em,rnd,fill=lightgray!50,anchor=base,baseline=] {#1};}
+\newcommand\h[2][]{\inlineblock{\hn[#1]{#2}}}
 \lstnewenvironment{haskell}{\lstset{language=myhaskell}}{}
 \makeatletter
 \def\inpuths #1 from #2 to #3;{\lstinputlisting[language=myhaskell,firstline=#2,lastline=#3]{#1}}
@@ -424,7 +425,7 @@
 	If you modify something by inserting a particular subpart and then view the result,
 	you'll get back exactly that subpart.\bigskip
 	\begin{haskell}
-		get entryCurrentValueL (set entryCurrentValueL "lol" entry) == "lol"
+		get entryCurrentValueL (set entryCurrentValueL "a" entry) == "a"
 	\end{haskell}\bigskip
 	\ergo{} The Lens should perform the update.
 \end{frame}
@@ -435,7 +436,7 @@
 	again inserting a different subpart \h{b}, it's exactly as if you only did the
 	second insertion.\bigskip
 	\begin{haskell}
-		set entryCurrentValueL "1" (set entryCurrentValueL "2" entry) == set entryCurrentValueL "1" entry
+		set entryCurrentValueL "b" (set entryCurrentValueL "a" entry) == set entryCurrentValueL "b" entry
 	\end{haskell}\bigskip
 	\ergo{} Previous updated should not leave any traces.
 \end{frame}
@@ -478,7 +479,7 @@
 	\begin{columns}[c]
 		\begin{column}{0.45\textwidth}
 			\begin{block}
-			Operators beginning with \hn{^} behave like \hn{view} functions:
+			Operators beginning with \h{^} behave like \h{view} functions:
 			\begin{haskell}
 				Value "c" "d" ^. def §\ergo~\texttt{"d"}§
 				Right 42 ^? _Left §\ergo~\texttt{Nothing}§
@@ -487,7 +488,7 @@
 		\end{column}
 		\begin{column}{0.45\textwidth}
 			\begin{block}
-			Operators ending in \texttt{\~{}} behave like \hn{set} functions:
+				Operators ending in \inlineblock{\string~\rlap{\phantom{t}}} behave like \h{set} functions:
 			\begin{haskell}
 				(_2 .~ 3) (0, 0) §\ergo~\texttt{(0, 3)}§
 				(_2 +~ 3) (0, 39) §\ergo~\texttt{(0, 42)}§
@@ -502,7 +503,7 @@
 
 \begin{frame}[fragile]
 	\frametitle{The lens Package}
-	With this knowledge aquired, we can finally write concise haskell-code:
+	With this knowledge aquired, we can finally write concise haskell-code:\par\medskip
 	\begin{haskell}
 		(6, 2) & both *~ 7 §\ergo~\texttt{(42, 14)}§
 	\end{haskell}\medskip
