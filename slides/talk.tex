@@ -39,6 +39,33 @@
 
 \usetikzlibrary{tikzmark}
 \def\m#1{\tikzmark{#1}}
+\newcommand<>\ul[5][0pt]{\begin{tikzpicture}[o,blend mode=multiply]
+	\coordinate(#5_west) at ([yshift=#1-0.25ex]pic cs:#3);
+	\coordinate(#5_east) at ([yshift=#1+0.35ex]pic cs:#4);
+	\fill[ul=#2,visible on=#6] (#5_west) rectangle node(#5){} (#5_east);
+\end{tikzpicture}}
+\tikzset{ul/.style={#1!70!black,opacity=0.40,rounded corners=.17ex}}
+\newcounter{ulcntr}\setcounter{ulcntr}{0}
+\newcommand<>\doul[2]{%
+	\m{uls\theulcntr}#2\m{ule\theulcntr}%
+	\ul<#3>{#1}{uls\theulcntr}{ule\theulcntr}{}%
+	\stepcounter{ulcntr}%
+}
+
+\newenvironment{gbox}{%
+	\begin{tikzpicture}[]%
+		\node[roundednode,inner sep=.7em,fill=lightgray,draw=lightgray,text width=\textwidth] \bgroup%
+}{%
+		\egroup;%
+	\end{tikzpicture}%
+}
+
+\renewenvironment{block}[1][]{%
+	\begin{beamerbox}{lightgray}{#1}%
+}{\end{beamerbox}}
+\newenvironment{sblock}[1][]{%
+	\begin{beamerbox}[sidebyside]{lightgray}{#1}%
+}{\end{beamerbox}}
 
 \usepackage{emoji}
 
@@ -54,7 +81,8 @@
 	language=haskell,
 	morekeywords={MonadReader,Getting,ASetter,Lens},
 }
-\newcommand\h[2][]{\lstinline[language=myhaskell,#1]{#2}}
+\newcommand\hn[2][]{\lstinline[language=myhaskell,#1]{#2}}
+\newcommand\h[2][]{\tikz[anchor=base,baseline]\node[inner sep=0.3333em,rnd,fill=lightgray!50,anchor=base,baseline=] {\hn[#1]{#2}};}
 \lstnewenvironment{haskell}{\lstset{language=myhaskell}}{}
 \makeatletter
 \def\inpuths #1 from #2 to #3;{\lstinputlisting[language=myhaskell,firstline=#2,lastline=#3]{#1}}
@@ -140,9 +168,9 @@
 	\begin{center}
 		\begin{tabular}{lcl}
 		\hline
-		\h{view} & \h{_1}  & \h{forOf}      \\ \hline
-		\h{set}  & \h{.>}  & \h{traverseOf} \\ \hline
-		\h{at}   & \h{^@?} & \h{over}       \\ \hline
+		\hn{view} & \hn{_1}  & \hn{forOf}      \\ \hline
+		\hn{set}  & \hn{.>}  & \hn{traverseOf} \\ \hline
+		\hn{at}   & \hn{^@?} & \hn{over}       \\ \hline
 		\end{tabular}
 	\end{center}\bigskip
 	We'll shortly see what they do and how we can use them.
@@ -199,7 +227,7 @@
 
 \begin{frame}[fragile]
 	\frametitle{Let's reinvent the lens}
-	Now, we can build our \h{Lens} abstraction
+	Now, we can build our lens abstraction
 	\inputhsxs examples/example.hs from 64 to 67;\medskip
 
 	We need to \enquote{reimplement} the function composition:
@@ -229,16 +257,23 @@
 
 \begin{frame}[fragile]
 	\frametitle{Let's reinvent the lens}
-	Puh, that was kinda complicated. But again, imagine you had to write\par\medskip
-	\begin{haskell}
-		let f = _foo v
-			b = _bar f
-			z = _baz b in
-		v { _foo = f {
-				_bar = b {
-					_baz = z + 1 } } }
-	\end{haskell}\medskip
-	instead of \h{v & foo.bar.baz +~ 1}\par\bigskip
+	Puh, that was kinda complicated. But again, think of how much less code you have to
+	write:\par
+	\begin{sblock}
+		\begin{haskell}
+			let f = _foo v
+				b = _bar f
+				z = _baz b in
+			v { _foo = f {
+					_bar = b {
+						_baz = z + 1
+					} } }
+		\end{haskell}
+		\tcblower
+		\begin{haskell}
+			v & foo . bar . baz +~ 1
+		\end{haskell}
+	\end{sblock}
 	We can now think \enquote{How can traverse through this?} instead of \enquote{How do
 	I un- and repack all of this?}.
 \end{frame}
@@ -252,7 +287,7 @@
 		\item We always have to create \h{Lens} values
 		\item No support for polymorphic updates
 	\end{itemize}\bigskip
-	It's (obviously) not impossible to overcome these limitations, but we'll skip this
+	It's definitely not impossible to overcome these limitations, but we'll skip this
 	for now.
 	\begin{modal}<2|handout:2>[\footnotesize Polymorphic Update]
 		\begin{haskell}
@@ -341,57 +376,24 @@
 
 \begin{frame}
 	\frametitle{A little Overview}
-	Lenses basically let us use two functions:
+	Lenses basically provide two kinds of operations:
 	\begin{itemize}
-		\item \h{view :: Lens' a b -> a -> b}
-		\item \h{set :: Lens' a b -> b -> a -> a}
+		\item \hn{view :: Lens' a b -> a -> b}
+		\item \hn{set :: Lens' a b -> b -> a -> a}
 	\end{itemize}\medskip
-	To use them, we need the actual \h{Lens}. It determines what part of the structure
+	To use them, we need the actual lens. It determines what part of the structure
 	we want to focus on.
 	\begin{itemize}
-		\item \h{_1 :: Lens' (a,b) a}
-		\item \h{_2 :: Lens' (a,b) b}
+		\item \hn{_1 :: Lens' (a,b) a}
+		\item \hn{_2 :: Lens' (a,b) b}
 	\end{itemize}\medskip
 	With all that in place, we can now combine the operation with a lens (or a
 	combination of lenses) and data:
 	\begin{itemize}
-		\item \h{view _1 ("hi", "there")}\kern8pt\ergo\kern8pt\h{"hi"}
-		\item \h{set _2 "cool" ("FP is", "")}\kern8pt\ergo\kern8pt\h{("FP is", "cool")}
-	\end{itemize}
+		\item \doul{red}{\hn{set}} \doul{blue}{\hn{_2}} \doul{green}{\hn{"cool"}} \doul{green}{\hn{("FP is", "")}}\kern8pt\ergo\kern8pt\hn{("FP is", "cool")}
+		\item \doul{red}{\hn{view}} \doul{blue}{\hn{_1}} \doul{green}{\hn{("hi", "there")}}\kern8pt\ergo\kern8pt\hn{"hi"}
+	\end{itemize}%
 \end{frame}
-
-% \def\mybox#1{\fcolorbox{#1}{#1!5}{\phantom{ssss}}}
-% \tikzset{a/.style n args={1}{roundednode,minimum width=1.5cm,minimum height=1cm,draw=#1,fill=#1!5}}
-% \begin{frame}
-% 	\frametitle{A little Overview}
-% 	\begin{wide}
-% 	\begin{center}
-% 	\begin{tikzpicture}
-% 		\node[a=blue] (L) {};
-% 		\node[a=red,right=of L] (O) {};
-% 		\node[a=green,right=of O] (D) {};
-% 	\end{tikzpicture}
-% 	\end{center}
-% 	\begin{columns}[c]
-% 		\begin{column}{0.45\textwidth}
-% 			% \begin{beamerbox}{blue}{Operation}
-% 				\h{view :: Lens' a b -> a -> b}\\
-% 				\h{set :: Lens' a b -> b -> a -> a}
-% 			% \end{beamerbox}
-% 			% \begin{beamerbox}{red}{Lens}
-% 				\h{_1 :: Lens' (a,b) a}\\
-% 				\h{_2 :: Lens' (a,b) b}
-% 			% \end{beamerbox}
-% 		\end{column}
-% 		\begin{column}{0.45\textwidth}
-% 			% \begin{beamerbox}{green}{Data}
-% 				\h{view _1 ("hi", "there")}\kern8pt\ergo\kern8pt\h{"hi"}\\
-% 				\h{set _2 "cool" ("FP is", "")}\kern8pt\ergo\kern8pt\h{("FP is", "cool")}
-% 			% \end{beamerbox}
-% 		\end{column}
-% 	\end{columns}
-% 	\end{wide}
-% \end{frame}
 
 \subsection{Lens Laws}
 
@@ -475,20 +477,22 @@
 	\begin{wide}
 	\begin{columns}[c]
 		\begin{column}{0.45\textwidth}
-			Operators beginning with \h{^}
+			\begin{block}
+			Operators beginning with \hn{^} behave like \hn{view} functions:
 			\begin{haskell}
 				Value "c" "d" ^. def §\ergo~\texttt{"d"}§
 				Right 42 ^? _Left §\ergo~\texttt{Nothing}§
 			\end{haskell}
-			are like \h{view}.
+			\end{block}
 		\end{column}
 		\begin{column}{0.45\textwidth}
-			Operators ending in \texttt{\~}
+			\begin{block}
+			Operators ending in \texttt{\~{}} behave like \hn{set} functions:
 			\begin{haskell}
 				(_2 .~ 3) (0, 0) §\ergo~\texttt{(0, 3)}§
 				(_2 +~ 3) (0, 39) §\ergo~\texttt{(0, 42)}§
 			\end{haskell}
-			are like \h{set}.
+			\end{block}
 		\end{column}
 	\end{columns}\bigskip
 	Writing \h{lens .~ value $ adt} every time is not very nice. But as always, there's
@@ -503,10 +507,10 @@
 		(6, 2) & both *~ 7 §\ergo~\texttt{(42, 14)}§
 	\end{haskell}\medskip
 	\begin{haskell}
-		l = entries . _last . value . curr
-		v = config ^?! l §\ergo~\texttt{"88"}§
-		config & l .~ v ++ "0" §\ergo~\texttt{"880"}§
-		over l (++"0") config §\ergo~\texttt{"880"}§
+		lens = entries . _last . value . curr
+		val = config ^?! lens §\ergo~\texttt{"88"} §
+		config & lens .~ val ++ "0" §\ergo~\texttt{\{ curr = "880", ... \} ...}§
+		over lens (++"0") config §\ergo\texttt{\{ curr = "880", ... \} ...}§
 	\end{haskell}\medskip
 	\begin{haskell}
 		(0, "upd.") & _1 .~ "poly." §\ergo~\texttt{("poly.", "upd.")}§
@@ -525,24 +529,34 @@
 % \end{frame}
 
 \tikzset{b/.style={arrow,short=1mm,draw=green}}
-\tikzset{c/.style={arrow,short=1mm,draw=gray,dashed}}
+\tikzset{c/.style={arrow,short=1mm,draw=lightgray,dashed}}
 \begin{frame}
 	\frametitle[Gotchas]{The lens Package}
 	You might have notices that lenses compose backwards:\par\bigskip
 	\begin{center}
 	\begin{tikzpicture}[node distance=7mm]
-		\node[roundednode] (A) {\strut\h{entries}};
-		\node[roundednode,right=of A] (B) {\strut\h{_last}};
-		\node[roundednode,right=of B] (C) {\strut\h{value}};
-		\node[roundednode,right=of C] (D) {\strut\h{curr}};
+		\node[roundednode] (A) {\strut\hn{entries}};
+		\node[roundednode,right=of A] (B) {\strut\hn{_last}};
+		\node[roundednode,right=of B] (C) {\strut\hn{value}};
+		\node[roundednode,right=of C] (D) {\strut\hn{curr}};
+		\node[left=of A] (AA) {};
+		\node[right=of D] (DD) {};
 
-		\draw[b] (A) to (B);
-		\draw[b] (B) to (C);
-		\draw[b] (C) to (D);
+		\begin{scope}[transform canvas={yshift=1.2mm}]
+			\draw[b] (AA) to (A);
+			\draw[b] (A) to (B);
+			\draw[b] (B) to (C);
+			\draw[b] (C) to (D);
+			\draw[b] (D) to (DD);
+		\end{scope}
 
-		\draw[c] (D.south) to[bend left] (C.south);
-		\draw[c] (C.south) to[bend left] (B.south);
-		\draw[c] (B.south) to[bend left] (A.south);
+		\begin{scope}[transform canvas={yshift=-1.2mm}]
+			\draw[c] (DD) to (D);
+			\draw[c] (D) to (C);
+			\draw[c] (C) to (B);
+			\draw[c] (B) to (A);
+			\draw[c] (A) to (AA);
+		\end{scope}
 	\end{tikzpicture}
 	\end{center}\par\medskip
 	This makes it weird for FP-enjoyers, but intuitive for OOP-weirdos.\par
@@ -551,8 +565,8 @@
 		\begin{tabular}{c|c}
 			lens & Haskell\\
 			\hline\hline
-			\h{5 & (+1)} & \h{(+1) $ 5}\\
-			\h{Just 5 <&> (+1)} & \h{(+1) <$> (Just 5)}\\
+			\hn{5 & (+1)} & \hn{(+1) $ 5}\\
+			\hn{Just 5 <&> (+1)} & \hn{(+1) <$> (Just 5)}\\
 		\end{tabular}
 	\end{center}
 	\begin{modal}<2|handout:2>
@@ -578,10 +592,14 @@
 	\frametitle{Prisms}
 	\begin{columns}[c]
 		\begin{column}{0.45\textwidth}
+			\begin{block}
 			Lenses reference something that \emph{always} exists.
+			\end{block}
 		\end{column}
 		\begin{column}{0.45\textwidth}
+			\begin{block}
 			Prisms reference something that \emph{may} exist.
+			\end{block}
 		\end{column}
 	\end{columns}\bigskip
 	\inpuths examples/prism.hs from 5 to 9;
@@ -602,14 +620,18 @@
 		\item We can usually use them like a normal lens (there's just a lillte
 			\h{Maybe} in the way)
 	\end{itemize}\bigskip
-	Imagine writing
-	\begin{haskell}
-		case v of
-			MainCouse _ (Desert d) -> MainCourse {
-				desert = Desert "Yogurt" }
-			_ -> v
-	\end{haskell}\medskip
-	instead of \h{meal1 &  _MainCourse . _2 . _Desert .~ "Yogurt"}
+	\begin{block}
+		\begin{haskell}
+			case v of
+				MainCouse _ (Desert d) -> MainCourse {
+					desert = Desert "Yogurt" }
+				_ -> v
+		\end{haskell}
+		\tcblower
+		\begin{haskell}
+			meal1 &  _MainCourse . _2 . _Desert .~ "Yogurt"
+		\end{haskell}
+	\end{block}
 \end{frame}
 
 \subsection{Traversals}
@@ -617,16 +639,22 @@
 	\frametitle{Traversals}
 	\begin{columns}[c]
 		\begin{column}{0.45\textwidth}
+			\begin{block}
 			Lenses reference something that \emph{always} exists.
+			\end{block}
 		\end{column}
 		\begin{onlyenv}<1|handout:0>
 		\begin{column}{0.45\textwidth}
+			\begin{block}
 			Prisms reference something that \emph{may} exist.
+			\end{block}
 		\end{column}
 		\end{onlyenv}
 		\begin{onlyenv}<2-|handout:1->
 		\begin{column}{0.45\textwidth}
+			\begin{block}
 			Traversals reference \emph{many things} that \emph{may} exist.
+			\end{block}
 		\end{column}
 		\end{onlyenv}
 	\end{columns}\bigskip
