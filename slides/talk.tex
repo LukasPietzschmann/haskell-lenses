@@ -590,6 +590,21 @@
 	\end{modal}
 \end{frame}
 
+\begin{frame}
+	\frametitle[Getters]{The lens Package}
+	Cool and all, but how do I build my own lens?\par\bigskip
+	\begin{block}
+		Writing a \emph{Getter} is really easy. We can simply promote any
+		\emph{function} or \emph{value} to a Getter.
+	\end{block}
+	\begin{itemize}\setlength\itemsep{10pt}
+		\item \h{to} builds a Getter from any function\par\medskip
+			\hn{("Hello", "FP2") ^. to snd}\quad\ergo\quad\hn{"FP2"}
+		\item \h{like} always returns a constant value\par\medskip
+			\hn{("Hello", "FP2") ^. like 42}\quad\ergo\quad\hn{42}
+	\end{itemize}
+\end{frame}
+
 \section{More goodies}
 
 \subsection{Virtual lenses}
