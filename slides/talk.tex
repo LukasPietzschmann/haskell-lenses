@@ -7,6 +7,16 @@
 \definecolor{dred}{HTML}{501613}
 \usetheme[english, color, coloraccent=dred, secslide, listings, footnote]{awesome}
 
+\lstdefinelanguage{ts}{
+	keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+	ndkeywords={get, number, class, export, boolean, throw, implements, import, this},
+	sensitive=false,
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	morestring=[b]',
+	morestring=[b]"
+}
+
 \usepackage[
 	backend=biber,
 	style=alphabetic
@@ -583,8 +593,20 @@
 \section{More goodies}
 
 \subsection{Virtual lenses}
-\begin{frame}
+\begin{frame}[fragile]
 	\frametitle{Virtual lenses}
+	A Getter does not always have to be backed by an actual structure. Theoretically, it
+	can return \emph{anything}:
+	\begin{lstlisting}[language=ts]
+		get someProp(): number {
+			return 42
+		}
+	\end{lstlisting}\bigskip
+	We can emulate this behavior with lenses, too:
+	\begin{haskell}
+		someProp = like 42
+		(0, 0) ^. someProp §\ergo~\texttt{42}§
+	\end{haskell}
 \end{frame}
 
 \subsection{Prisms}
