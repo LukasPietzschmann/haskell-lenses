@@ -627,11 +627,8 @@
 
 \begin{frame}
 	\frametitle[Getters]{The lens Package}
-	Cool and all, but how do I build my own lens?\par\bigskip
-	\begin{block}
-		Writing a \emph{Getter} is really easy. We can simply promote any
-		\emph{function} or \emph{value} to a Getter.
-	\end{block}
+	Writing a \emph{Getter} is really easy. We can simply promote any \emph{function} or
+	\emph{value} to a Getter.\par\bigskip
 	\begin{itemize}\setlength\itemsep{10pt}
 		\item \h{to} builds a Getter from any function\par\medskip
 			\hn{("Hello", "FP2") ^. to snd}\quad\ergo\quad\hn{"FP2"}
@@ -666,8 +663,8 @@
 				s = setting (\f (x,y) -> (x,f y))
 				_2 = lens g s
 			\end{haskell}
-		\item You can also just write a custom function with the type \h{l :: forall f.
-			Functor f => (a -> f b) -> s -> f t} that satisfies all three lens laws.
+		\item You can also simply write a custom function with the type \h{l :: forall
+			f. Functor f => (a -> f b) -> s -> f t} that satisfies all three lens laws.
 			Good luck!
 	\end{itemize}
 \end{frame}
