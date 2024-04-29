@@ -574,7 +574,7 @@
 \tikzset{c/.style={arrow,short=1mm,draw=lightgray,dashed}}
 \begin{frame}
 	\frametitle[Gotchas]{The lens Package}
-	You might have notices that lenses compose backwards:\par\bigskip
+	You might have notices that lenses compose backwards:\par
 	\begin{center}
 	\begin{tikzpicture}[node distance=7mm]
 		\node[roundednode] (A) {\strut\hn{entries}};
@@ -599,8 +599,12 @@
 			\draw[c] (B) to (A);
 			\draw[c] (A) to (AA);
 		\end{scope}
+
+		\coordinate (X) at ($(B)!.5!(C)$);
+		\node[above=of X,yshift=-2mm] {\small\color{green}lens};
+		\node[below=of X,yshift=2mm] {\small\color{lightgray}Haskell};
 	\end{tikzpicture}
-	\end{center}\par\medskip
+	\end{center}\par
 	This makes it weird for FP-enjoyers, but intuitive for OOP-weirdos.\par
 	The same applies for all kinds of operators:\par
 	\begin{center}
