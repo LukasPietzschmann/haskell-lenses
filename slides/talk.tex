@@ -640,6 +640,38 @@
 	\end{itemize}
 \end{frame}
 
+\begin{frame}
+	\frametitle[Setters]{The lens Package}
+	Writing a \emph{Setter} is only slightly more complicated, as we don't set the value
+	directly, but apply a function on the focused part.\par\bigskip
+	\begin{itemize}\setlength\itemsep{10pt}
+		\item \h{setting} receives a function, that applies another function to the
+			correct value inside a structure\par\medskip
+			\hn{(4,1) & setting (\\f (x,y) -> (x,f y)) .~ 2}\quad\ergo\quad\hn{(4,2)}
+		\item \h{sets} is in theory a bit more flexible, but that's a out of scope for
+			today\par\medskip
+			\hn{(4,1) & sets (\\f (x,y) -> (x,f y)) .~ 2}\quad\ergo\quad\hn{(4,2)}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle[Getter + Setter]{The lens Package}
+	Having a separate Getter and Setter is not always desirable. Now, we want to create
+	our own lens that we can use as both Getter and Setter. This time, \h{makeLenses}
+	doesn't count!\par\bigskip
+	\begin{itemize}\setlength\itemsep{10pt}
+		\item We can use \h{lens} to combine a Getter and Setter into a lens
+			\begin{haskell}
+				g = to snd
+				s = setting (\f (x,y) -> (x,f y))
+				_2 = lens g s
+			\end{haskell}
+		\item You can also just write a custom function with the type \h{l :: forall f.
+			Functor f => (a -> f b) -> s -> f t} that satisfies all three lens laws.
+			Good luck!
+	\end{itemize}
+\end{frame}
+
 \section{More Goodies}
 
 \subsection{Virtual lenses}
