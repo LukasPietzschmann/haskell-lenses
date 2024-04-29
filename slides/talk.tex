@@ -523,6 +523,7 @@
 			Operators beginning with \h{^} behave like \h{view} functions:
 			\begin{haskell}
 				Value "c" "d" ^. def §\ergo~\texttt{"d"}§
+				(1,2) ^.. both §\ergo~\texttt{[1,2]}§
 				Right 42 ^? _Left §\ergo~\texttt{Nothing}§
 			\end{haskell}
 			\end{block}
@@ -531,8 +532,9 @@
 			\begin{block}
 				Operators ending in \inlineblock{\string~\rlap{\phantom{t}}} behave like \h{set} functions:
 			\begin{haskell}
-				(_2 .~ 3) (0, 0) §\ergo~\texttt{(0, 3)}§
-				(_2 +~ 3) (0, 39) §\ergo~\texttt{(0, 42)}§
+				(_2 .~ 3) (0, 0) §\ergo~\texttt{(0,3)}§
+				(_2 +~ 3) (0, 39) §\ergo~\texttt{(0,42)}§
+				(both %~ (+1)) (3,1) §\ergo~\texttt{(4,2)}§
 			\end{haskell}
 			\end{block}
 		\end{column}
@@ -577,10 +579,10 @@
 	You might have notices that lenses compose backwards:\par
 	\begin{center}
 	\begin{tikzpicture}[node distance=7mm]
-		\node[roundednode] (A) {\strut\hn{entries}};
-		\node[roundednode,right=of A] (B) {\strut\hn{_last}};
-		\node[roundednode,right=of B] (C) {\strut\hn{value}};
-		\node[roundednode,right=of C] (D) {\strut\hn{curr}};
+		\node[roundednode,draw=none,shadow,fill=gray!20] (A) {\strut\hn{entries}};
+		\node[roundednode,draw=none,shadow,fill=gray!20,right=of A] (B) {\strut\hn{_last}};
+		\node[roundednode,draw=none,shadow,fill=gray!20,right=of B] (C) {\strut\hn{value}};
+		\node[roundednode,draw=none,shadow,fill=gray!20,right=of C] (D) {\strut\hn{curr}};
 		\node[left=of A] (AA) {};
 		\node[right=of D] (DD) {};
 
@@ -677,14 +679,14 @@
 	A Getter does not always have to be backed by an actual structure. Theoretically, it
 	can return \emph{anything}:
 	\begin{lstlisting}[language=ts]
-		get someProp(): number {
+		get virtualProp(): number {
 			return 42
 		}
 	\end{lstlisting}\bigskip
-	We can emulate this behavior with lenses, too:
+	We can easily achieve this behavior with lenses, too:
 	\begin{haskell}
-		someProp = like 42
-		(0, 0) ^. someProp §\ergo~\texttt{42}§
+		virtualProp = like 42
+		(0,0) ^. virtualProp §\ergo~\texttt{42}§
 	\end{haskell}
 \end{frame}
 
@@ -692,18 +694,13 @@
 
 \begin{frame}[fragile]
 	\frametitle{Prisms}
-	\begin{columns}[c]
-		\begin{column}{0.45\textwidth}
-			\begin{block}
-			Lenses reference something that \emph{always} exists.
-			\end{block}
-		\end{column}
-		\begin{column}{0.45\textwidth}
-			\begin{block}
-			Prisms reference something that \emph{may} exist.
-			\end{block}
-		\end{column}
-	\end{columns}\bigskip
+	% \begin{sblock}[]
+	% 	Lenses reference something that \emph{always} exists.
+	% 	\tcblower
+	% 	Prisms reference something that \emph{may} exist.
+	% \end{sblock}\bigskip
+	So far, we only looked at product types. But what about sum types? Prisms to the
+	rescue!\par\bigskip
 	\inpuths examples/prism.hs from 5 to 9;
 	\begin{haskell}
 		meal1 ^? _MainCourse . _2 . _Desert §\ergo~\texttt{Just "Pudding"}§
@@ -717,11 +714,10 @@
 \begin{frame}[fragile]
 	\frametitle{Prisms}
 	\begin{itemize}
-		\item Functions that are prefixed by an underscore are prisms
 		\item We already used a prism: remember \h{_last}?
-		\item We can usually use them like a normal lens (there's just a lillte
+		\item We can usually use them like a normal lens (there's just a little
 			\h{Maybe} in the way)
-	\end{itemize}\bigskip
+	\end{itemize}\medskip
 	\begin{block}[versus]
 		\begin{haskell}
 			case meal1 of
@@ -730,36 +726,67 @@
 				_ -> meal1
 		\end{haskell}
 		\tcblower
-		\begin{haskell}
-			meal1 &  _MainCourse . _2 . _Desert .~ "Yogurt"
-		\end{haskell}
+		\hn{meal1 &  _MainCourse . _2 . _Desert .~ "Yogurt"}
 	\end{block}
 \end{frame}
 
 \subsection{Traversals}
-\begin{frame}
+\begin{frame}[fragile]
 	\frametitle{Traversals}
-	\begin{columns}[c]
-		\begin{column}{0.45\textwidth}
-			\begin{block}
-			Lenses reference something that \emph{always} exists.
-			\end{block}
-		\end{column}
-		\begin{onlyenv}<1|handout:0>
-		\begin{column}{0.45\textwidth}
-			\begin{block}
-			Prisms reference something that \emph{may} exist.
-			\end{block}
-		\end{column}
-		\end{onlyenv}
-		\begin{onlyenv}<2-|handout:1->
-		\begin{column}{0.45\textwidth}
-			\begin{block}
-			Traversals reference \emph{many things} that \emph{may} exist.
-			\end{block}
-		\end{column}
-		\end{onlyenv}
-	\end{columns}\bigskip
+	% \begin{columns}[c]
+	% 	\begin{column}{0.45\textwidth}
+	% 		\begin{block}
+	% 		Lenses reference something that \emph{always} exists.
+	% 		\end{block}
+	% 	\end{column}
+	% 	\begin{column}{0.45\textwidth}
+	% 		\begin{block}
+	% 		Traversals reference \emph{many things} that \emph{may} exist.
+	% 		\end{block}
+	% 	\end{column}
+	% \end{columns}\bigskip
+	Wouldn't it be nice to have a lens that focuses on any element of a traversable
+	container? Let's start with every element of the list:
+	\begin{haskell}
+		["Hello", "there"] ^. traverse §\ergo~\texttt{"Hellothere"}§
+	\end{haskell}\bigskip
+	Huh?! What's that? I would've expected \texttt{["Hello", "there"]}.\par
+	When viewing the result of \h{traverse}, it get's shoved through \h{mappend} first. That's why you typically use
+	traversals own view-operator \h{^..}.
+	% allOf (traverse . _2) even [(1,2),(3,4)] §\ergo~\texttt{True}§
+	\begin{haskell}
+		[1..5] ^.. traverse §\ergo~\texttt{[1,2,3,4,5]}§
+		[(1,2),(3,4)] ^.. traverse . _2 §\ergo~\texttt{[1,3]}§
+
+		[1..5] & traverse +~ 1 §\ergo~\texttt{[2,3,4,5,6]}§
+	\end{haskell}
+	% \begin{modal}<2|handout:2>[Folds]
+	% 	\begin{center}
+	% 	\begin{tabular}{lll}
+	% 		\hn{allOf} & \hn{anyOf} & \hn{noneOf}\\
+	% 		\hn{sumOf} & \hn{productOf} & \hn{lengthOf}\\
+	% 		\hn{concatOf} & \hn{elemOf} & \hn{notElemOf}\\
+	% 		\hn{maximumOf} & \hn{minimumOf} & \hn{findOf}
+	% 	\end{tabular}
+	% 	\end{center}\medskip
+	% 	You see the pattern, just append \hn{Of} to the function name, and tadaa, here's
+	% 	your new fold that works with lenses.
+	% \end{modal}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Traversals}
+	As promised, here's how we can focus on a specific element of a traversable:
+	\begin{haskell}
+		[1..5] ^.. ix 1 §\ergo~\texttt{[2]}§
+		[1..5] ^.. ix 5 §\ergo~\texttt{[]}§
+	\end{haskell}\bigskip
+	Returning an empty list on failure does not seem very nice. Let's use the
+	prism-view-operator to get a \h{Maybe}:\par
+	\begin{haskell}
+		[1..5] ^? ix 1 §\ergo~\texttt{Just 2}§
+		[1..5] ^? ix 5 §\ergo~\texttt{Nothing}§
+	\end{haskell}
 \end{frame}
 
 \subsection{Isos}
