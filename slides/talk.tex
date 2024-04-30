@@ -814,11 +814,50 @@
 \begin{frame}
 	\frametitle{Isos}
 	\begin{wide}
-		\centering\Huge\bfseries There are also Isos! You can look them up by yourself~:)
+		\centering\Large\bfseries There are also Isos! You can look them up by yourself~:)
 	\end{wide}
 \end{frame}
 
 \section{Summary}
+\tikzset{
+	u/.style={roundednode,draw=none,shadow,fill=gray!20},
+	% u/.style={roundednode,fill=gray!20},
+	v/.style={arrows={-Stealth[round,inset=0pt,length=10pt,angle'=90,open]},lw,lcr,rnd},
+}
+\def\card#1#2{\begin{tikzpicture}[node distance=0]
+	\node[text width=0.45\textwidth] (C) {#2};
+	\node[above=of C,yshift=-2mm] (T) {#1};
+	\node[u,fit=(T)(C),node on layer=background] () {};
+\end{tikzpicture}}
+\begin{frame}
+	\frametitle{Summary}
+	\begin{wide}
+		\begin{tikzpicture}
+			\node (L) {\card{Lens}{\begin{itemize}
+				\item Focus on a single part of a data structure
+				\item Can be viewed with \hn{^.}
+			\end{itemize}}};
+			\node[right=of L] (P) {\card{Prism}{\begin{itemize}
+				\item Focus on a single part that may not exist
+				\item Can be viewed with \hn{^?}
+			\end{itemize}}};
+			\coordinate (A) at ($(L)!.5!(P)$);
+			\coordinate (M) at (A |- L.north);
+			\node[above=of M] (T) {\card{Traversals}{\begin{itemize}
+				\item Focus on multiple parts (also zero) of a data structure
+				\item Should be viewed with \hn{^..}
+			\end{itemize}}};
+			\draw[v] (L) to (T);
+			\draw[v] (P) to (T);
+		\end{tikzpicture}
+	\end{wide}
+	% ^. for lens
+	% ^? for prism
+	% ^.. for traversal
+	% lens one element
+	% prism maybe element
+	% traversal many elements
+\end{frame}
 
 \definecolor{dblue}{HTML}{000742}
 \newsavebox\duckforscale\newsavebox\sunb
