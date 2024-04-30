@@ -817,7 +817,7 @@
 \setbeamercolor{footlineright}{bg=yellow}
 \begin{frame}
 	\frametitle{And so much more}
-	\centering
+	\begin{wide}\centering
 	\begin{tikzpicture}[o,every node/.append style={execute at begin node=\scriptsize}]
 		\fill[shade,top color=white,bottom color=dblue] (current page.west) rectangle (current page.south east);
 		\filldraw[decoration={random steps,segment length=3mm,amplitude=1mm},decorate,
@@ -843,6 +843,7 @@
 		\node at (0.4,-1.7) {Subtyping};
 		\node[text width=9ex,align=center] at (0,-2.3) {Typesignatures};
 	\end{tikzpicture}
+	\end{wide}
 \end{frame}
 \endgroup
 
