@@ -270,7 +270,7 @@
 
 \begin{frame}[fragile]
 	\frametitle{Let's reinvent the lens}
-	Now, we can build our lens abstraction
+	Now, we can build our lens abstraction:
 	\inputhsxs examples/example.hs from 64 to 67;\medskip
 
 	We need to \enquote{reimplement} the function composition:
@@ -480,7 +480,7 @@
 	\begin{haskell}
 		set entryCurrentValueL "b" (set entryCurrentValueL "a" entry) == set entryCurrentValueL "b" entry
 	\end{haskell}\bigskip
-	\ergo{} Previous updated should not leave any traces.
+	\ergo{} Previous updates should not leave any traces.
 \end{frame}
 
 \begin{frame}
@@ -535,7 +535,7 @@
 			\begin{haskell}
 				(_2 .~ 3) (0, 0) §\ergo~\texttt{(0,3)}§
 				(_2 +~ 3) (0, 39) §\ergo~\texttt{(0,42)}§
-				(both %~ (+1)) (3,1) §\ergo~\texttt{(4,2)}§
+				(_1 %~ (+1)) (3,2) §\ergo~\texttt{(4,2)}§
 			\end{haskell}
 			\end{block}
 		\end{column}
@@ -547,7 +547,7 @@
 
 \begin{frame}[fragile]
 	\frametitle{The lens Package}
-	With this knowledge aquired, we can finally write concise haskell-code:\par\medskip
+	With this knowledge aquired, we can finally write concise Haskell-code:\par\medskip
 	\begin{haskell}
 		(6, 2) & both *~ 7 §\ergo~\texttt{(42, 14)}§
 	\end{haskell}\medskip
@@ -648,7 +648,7 @@
 		\item \h{setting} receives a function, that applies another function to the
 			correct value inside a structure\par\medskip
 			\hn{(4,1) & setting (\\f (x,y) -> (x,f y)) .~ 2}\quad\ergo\quad\hn{(4,2)}
-		\item \h{sets} is in theory a bit more flexible, but that's a out of scope for
+		\item \h{sets} is in theory a bit more flexible, but that's out of scope for
 			today\par\medskip
 			\hn{(4,1) & sets (\\f (x,y) -> (x,f y)) .~ 2}\quad\ergo\quad\hn{(4,2)}
 	\end{itemize}
@@ -704,11 +704,11 @@
 	rescue!\par\bigskip
 	\inpuths examples/prism.hs from 5 to 9;
 	\begin{haskell}
-		meal1 ^? _MainCourse . _2 . _Desert §\ergo~\texttt{Just "Pudding"}§
-		meal2 ^? _MainCourse . _2 . _Desert §\ergo~\texttt{Nothing}§
+		meal1 ^? _MainCourse . _2 . _Dessert §\ergo~\texttt{Just "Pudding"}§
+		meal2 ^? _MainCourse . _2 . _Dessert §\ergo~\texttt{Nothing}§
 	\end{haskell}
 	\begin{haskell}
-		meal1 &  _MainCourse . _2 . _Desert .~ "Yogurt"
+		meal1 &  _MainCourse . _2 . _Dessert .~ "Yogurt"
 	\end{haskell}
 \end{frame}
 
@@ -769,8 +769,8 @@
 		["Hello", "there"] ^. traverse §\ergo~\texttt{"Hellothere"}§
 	\end{haskell}\bigskip
 	Huh?! What's that? I would've expected \texttt{["Hello", "there"]}.\par
-	When viewing the result of \h{traverse}, it get's shoved through \h{mappend} first. That's why you typically use
-	traversals own view-operator \h{^..}.
+	When viewing the result of \h{traverse}, it gets shoved through \h{mappend} first. That's why you typically use
+	traversal's own view-operator \h{^..}.
 	% allOf (traverse . _2) even [(1,2),(3,4)] §\ergo~\texttt{True}§
 	\begin{haskell}
 		[1..5] ^.. traverse §\ergo~\texttt{[1,2,3,4,5]}§
