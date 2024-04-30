@@ -206,14 +206,14 @@
 
 \begin{frame}
 	\frametitle{What are lenses}
-	Well, \enquote{Lenses} is \textit{only} a \link package to https://hackage.haskell.org/package/lens; \ldots{}
-	Here are some common function from that package:\bigskip
+	Well, \enquote{lens} is also a \link package to https://hackage.haskell.org/package/lens;
+	\ldots{} Here are some random functions and operators from that package:\bigskip
 	\begin{center}
 		\begin{tabular}{lcl}
 		\hline
-		\hn{view} & \hn{_1}  & \hn{forOf}      \\ \hline
-		\hn{set}  & \hn{.>}  & \hn{traverseOf} \\ \hline
-		\hn{at}   & \hn{^@?} & \hn{over}       \\ \hline
+		\hn{view} & \hn{_1}  & \hn{allOf}    \\ \hline
+		\hn{set}  & \hn{^.}  & \hn{anyOf}    \\ \hline
+		\hn{over} & \hn{^?!} & \hn{concatOf} \\ \hline
 		\end{tabular}
 	\end{center}\bigskip
 	We'll shortly see what they do and how we can use them.
@@ -554,8 +554,8 @@
 	\begin{haskell}
 		lens = entries . _last . value . curr
 		val = config ^?! lens §\ergo~\texttt{"88"} §
-		config & lens .~ val ++ "0" §\ergo~\texttt{\{ curr = "880", ... \} ...}§
-		over lens (++"0") config §\ergo\texttt{\{ curr = "880", ... \} ...}§
+		config & lens .~ val ++ "0" §\ergo~\texttt{curr = "880" \color{gray}inside config}§
+		over lens (++"0") config §\ergo~\texttt{curr = "880" \color{gray}inside config}§
 	\end{haskell}\medskip
 	\begin{haskell}
 		(0, "upd.") & _1 .~ "poly." §\ergo~\texttt{("poly.", "upd.")}§
