@@ -818,6 +818,32 @@
 	\end{wide}
 \end{frame}
 
+\begin{frame}
+	\frametitle{Isos}
+	Just kidding \emoji{wink} Here's a very short summary:
+	\begin{itemize}
+		\item An \h{Iso} is a connection between two types that are equivalent in every way
+		\item Isos should follow the following laws:\par
+			\hn{forward . backward = id}\par
+			\hn{backward . forward = id}
+		\item We can write our own \h{Iso} by providing a forward and backward mapping
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Isos}
+	\begin{haskell}
+		maybeToEither = maybe (Left ()) Right
+		eitherToMaybe = either (const Nothing) Just
+
+		someIso :: Iso' (Maybe a) (Either () a)
+		someIso = iso maybeToEither eitherToMaybe
+
+		Just "hi" ^. someIso §\ergo~\texttt{Right "hi"}§
+		Left "ho" ^. from someIso §\ergo~\texttt{Nothing}§
+	\end{haskell}
+\end{frame}
+
 \section{Summary}
 \tikzset{
 	u/.style={roundednode,draw=none,shadow,fill=gray!20},
