@@ -1,4 +1,4 @@
-\ProvidesClass{sheet-layout}[Kinda awesome exercise sheet class]
+\ProvidesClass{exercise}[Kinda awesome exercise sheet class]
 
 \LoadClass[11pt, DIV=14, parskip=half]{scrartcl}
 
