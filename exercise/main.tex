@@ -19,6 +19,8 @@
 	UprightFont={*-Regular},
 ]{Fira Code}
 
+\def\link #1 to #2;{\def\ULdepth{.5pt}\def\ULthickness{.1pt}\uline{\href{#2}{#1}}}
+
 \title{Functional Programming II}
 \author{Lukas Pietzschmann}
 \email{lukas.pietzschmann@uni-ulm.de}
@@ -31,8 +33,80 @@
 \begin{document}
 	\maketitle
 
+	\begin{exercise}[Some hints]{}
+		If you ever get stuck, don't even think about asking me for help! While that was
+		obviously a joke, I'll leave you some notes on the documentation here, just in
+		case you want to try helping yourself first.
+
+		You can find the lens package's documentation \link here to
+		https://hackage.haskell.org/package/lens;. If you scroll down to \link Modules
+		to https://hackage.haskell.org/package/lens\#modules;, you can find an overview
+		of all the modules that are part of the lens package. Here's a little summary of
+		the most important ones:
+		\begin{description}
+			\item[Control.Lens.Lens] Here you can find the \texttt{Lens} type itself and
+				some functions to work with it. We won't need most of them, but you can,
+				e.g., find the \link\texttt{\&}-operators to
+				https://hackage.haskell.org/package/lens-5.2.3/docs/Control-Lens-Lens.html\#g:4;
+				and the \link \texttt{lens} function to
+				https://hackage.haskell.org/package/lens-5.2.3/docs/Control-Lens-Lens.html\#v:lens;
+				here.
+			\item[Control.Lens.Operators] Here are all the operators we used. Since this
+				module is only a listing of operators from other modules, you can find
+				hyperlinks to the actual modules on the left or above every section. You
+				can press \texttt{<CTRL-f>} on this page, hit random symbols on your
+				keyboard, and you'll probably find an operator with this name.
+			\item[Control.Lens.Getter] You probably expected \link\texttt{to} to
+				https://hackage.haskell.org/package/lens-5.2.3/docs/Control-Lens-Getter.html\#v:to;
+				and \link\texttt{like} to
+				https://hackage.haskell.org/package/lens-5.2.3/docs/Control-Lens-Getter.html\#v:like;
+				to be defined here, but you'll also find the \link\texttt{view} to
+				https://hackage.haskell.org/package/lens-5.2.3/docs/Control-Lens-Getter.html\#v:view;
+				function and it's corresponding \link operator to
+				https://hackage.haskell.org/package/lens-5.2.3/docs/Control-Lens-Getter.html\#v:-94-.;
+				there.
+			\item[Control.Lens.Setter] Analogous to the \texttt{Getter} module, you can
+				find the \link\texttt{set} to
+				https://hackage.haskell.org/package/lens-5.2.3/docs/Control-Lens-Setter.html\#v:set;
+				and \link\texttt{setting} to
+				https://hackage.haskell.org/package/lens-5.2.3/docs/Control-Lens-Setter.html\#v:setting;
+				functions here. Along with, e.g., \link\texttt{over} to
+				https://hackage.haskell.org/package/lens-5.2.3/docs/Control-Lens-Setter.html\#v:over;
+				and some \texttt{set}-like operators.
+			\item[Control.Lens.Prism] Here, all Prism related types and functions are
+				defined. You might be primarily interested in the section \link Common
+				Prisms to
+				https://hackage.haskell.org/package/lens-5.2.3/docs/Control-Lens-Prism.html\#g:4;.
+			\item[Control.Lens.Traversal] Basically, we only used two functions from
+				here; \link\texttt{traverse} to
+				https://hackage.haskell.org/package/lens-5.2.3/docs/Control-Lens-Traversal.html\#v:traverse;,
+				and \link\texttt{over} to
+				https://hackage.haskell.org/package/lens-5.2.3/docs/Control-Lens-Traversal.html\#v:over;.
+				But the \link Common Traversals to
+				https://hackage.haskell.org/package/lens-5.2.3/docs/Control-Lens-Traversal.html\#g:5;
+				section might contain some more interesting functions.
+		\end{description}
+		If you are looking for a specific function, you can also always use the Quick
+		Jump button on top of the page. There, you can just type the name of the
+		function and the search box will present you a link to its documentation.
+	\end{exercise}
+
 	\begin{exercise}[Exercise 0]{Setup}
-		Setup some stuff to be able to do all following tasks. Also demonstrate custom exercise numbers.
+		To get started, you should have the lens package installed. You can use cabal for this:
+		\begin{lstlisting}[language=bash]
+			cabal install --lib lens
+		\end{lstlisting}
+		On my system, I have GHC \texttt{9.4.8} and lens \texttt{5.2.3} installed.
+
+		You can check if your installation works by loading the provided
+		\texttt{Main.hs} file into GHCi and printing the value of
+		\texttt{currentTextWidth}.
+		\begin{lstlisting}[language=bash]
+			ghci Main.hs
+			ghci> currentTextWidth
+			Just "88"
+		\end{lstlisting}
+		If this works, you should be good to go.
 	\end{exercise}
 
 	\begin{exercise}{Example Title}
