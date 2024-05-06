@@ -16,6 +16,9 @@
 	UprightFont={*-Regular},
 ]{Fira Code}
 
+\newcommand\h[2][]{\lstinline[language=haskell,#1]{#2}}
+\lstnewenvironment{haskell}{\lstset{language=haskell}}{}
+
 \def\link #1 to #2;{\def\ULdepth{.5pt}\def\ULthickness{.1pt}\uline{\href{#2}{#1}}}
 
 \title{Functional Programming II}
@@ -98,11 +101,11 @@
 		You can check if your installation works by loading the provided
 		\texttt{Main.hs} file into GHCi and printing the value of
 		\texttt{currentTextWidth}.
-		\begin{lstlisting}[language=bash]
+		\begin{haskell}
 			ghci Main.hs
-			ghci> currentTextWidth
-			Just "88"
-		\end{lstlisting}
+			ghci> test
+			((1,2),3,4)
+		\end{haskell}
 		If this works, you should be good to go.
 	\end{exercise}
 
