@@ -109,12 +109,25 @@
 		If this works, you should be good to go.
 	\end{exercise}
 
-	\begin{exercise}{Example Title}
-		Example Init Task:
+	\begin{exercise}{Getting familiar with lenses again}
+		Let's start easy by composing some lenses and accessing and changing some
+		values.
 		\begin{tasks}
-			\item Task 1
-			\item Task 2
-			\item Task 3
+			\item Combine different lenses to form a new lens that focuses on the string
+				\h{"Hi"} inside \h{(1, ("Hi", "Ho"), 2)}.
+			\item Now use this lens to retrieve the focused part. Use both the operator
+				and function for this.
+			\item Change \h{"Hi"} to a integer value of your choice and bind the result
+				to a name. Again, using the operator and function.
+			\item Finally, use the lens --- that now focuses on the integer value you
+				just set --- to multiply the value by \h{11}.
+			\item Now we change things up a little bit. \h{"Hi"} is now inside a list:
+				\h{(["Hi", "Ho"], ["He", "Hu"])}. Change your lens accordingly.
+			\item Can you think of another lens that can focus on \h{"Hi"}?
+			\item Finally, we no longer want to focus on just one element, but on
+				\h{"Hi"} and \h{"He"}. Write a lens that does exactly this.
+			\item Now use this lens to change both \h{"Hi"} and \h{"He"} to a string of
+				your choice.
 		\end{tasks}
 	\end{exercise}
 \end{document}
