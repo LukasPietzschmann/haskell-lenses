@@ -74,7 +74,7 @@ example :: File Document
 example = Folder "root" [
     Folder "home" [
         Folder "luke" [
-            File $ Doc Text (Metadata ".zshenv" "Luke") "export EDITOR=e",
+            File $ Doc Text (Metadata ".zshenv" "Luke") "export EDITOR=nvim",
             File $ Doc Text (Metadata ".zsh_history" "Luke") "dnf rm java"
           ]
       ]

@@ -146,7 +146,7 @@ example :: FileSystem
 example = FileSystem $ Folder "root" [
     Folder "home" [
         Folder "luke" [
-            File $ Doc Text (Metadata ".zshenv" "luke") "export EDITOR=e",
+            File $ Doc Text (Metadata ".zshenv" "luke") "export EDITOR=nvim",
             File $ Doc Text (Metadata ".zsh_history" "luke") "sudo dnf rm java"
           ]
       ]
@@ -177,7 +177,7 @@ example = FileSystem $ Folder "root" [
 				this function is a list with one layer of documents:
 				\begin{haskell}
 example = [
-  Doc Text (Metadata ".zshenv" "luke") "export EDITOR=e",
+  Doc Text (Metadata ".zshenv" "luke") "export EDITOR=nvim",
   Doc Text (Metadata ".zsh_history" "luke") "sudo dnf rm java"
 ]
 				\end{haskell}
@@ -210,7 +210,7 @@ example = [
 		Great, we can now write code like this:
 		\begin{haskell}
 example ^.. find ".zshenv" . content
--- ["export EDITOR=e"]
+-- ["export EDITOR=nvim"]
 		\end{haskell}
 		By the way, this would also work if our filesystem would contain multiple files
 		with the same name. But since we assumed that this is not the case, we can also
