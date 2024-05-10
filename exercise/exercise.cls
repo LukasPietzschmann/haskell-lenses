@@ -7,7 +7,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\RequirePackage[color,tikz,listings]{smile}
+\RequirePackage[color,coloraccent=red,tikz,listings,footnote]{smile}
 \RequirePackage{microtype}
 \RequirePackage{etoolbox}
 \RequirePackage[english]{babel}
