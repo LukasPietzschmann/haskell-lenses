@@ -118,17 +118,15 @@
 
 \newcounter{excounter}
 \newenvironment{exercise}[2][\empty]{%
-	\def\ex{Exercise~\arabic{excounter}}
-	\ifx#1\empty\refstepcounter{excounter}\fi\vspace{2em}
-	\relax\parbox\linewidth{
-		{\usekomafont{disposition}\ifx#1\empty
-			\ex\pdfbookmark[0]{\ex}{Ex. \arabic{excounter}}
-		\else
-			\pdfbookmark[0]{#1}{Ex. \arabic{excounter}}#1
-		\fi}
-		\quad{\usekomafont{subsection}\textcolor{darkgray}{#2}}
-	}
-	\par
+	\def\ex{Exercise~\arabic{excounter}}%
+	\ifx#1\empty\refstepcounter{excounter}\fi%
+	\vspace{2em}\penalty-1000%
+	{\usekomafont{disposition}\ifx#1\empty%
+		\ex\pdfbookmark[0]{\ex}{Ex. \arabic{excounter}}%
+	\else%
+		\pdfbookmark[0]{#1}{Ex. \arabic{excounter}}#1%
+	\fi}%
+	\quad{\usekomafont{subsection}\textcolor{darkgray}{#2}}\par
 }{\par}
 
 \newcommand*{\uulmlogo}[0]{%
