@@ -40,38 +40,70 @@ vh = v' & l''' .~ "Boo"
 
 
 -- | Exercise 2 | --
-data DocumentType = TextDocument | PDFDocument | ImageDocument
+data DocumentType = Text | PDF | Image
   deriving (Show, Eq)
 
-data Metadata = DocumentMetadata {
+data Metadata = Metadata {
     _title :: String,
-    _author :: String,
-    _creationDate :: String
+    _author :: String
   } deriving Show
 
-data Document = Document {
-    docType :: DocumentType,
-    metadata :: Metadata,
-    content :: String
+data Document = Doc {
+    _docType :: DocumentType,
+    _metadata :: Metadata,
+    _content :: String
   } deriving Show
 
-data FolderContent = Doc Document
-                   | SubFolder Folder
+-- In good operating systems, "everything is a file"
+-- We don't specify an inner type, as we later want to fold over it, but we
+-- will only use "File Document"
+data File a = Folder String [File a] | File a
   deriving Show
 
-data BinaryTree = Leaf FolderContent
-                | Node FolderContent BinaryTree BinaryTree
-  deriving Show
-
-data Folder = Folder {
-    folderName :: String,
-    contents :: BinaryTree
-  } deriving Show
-
-newtype FileSystem = FileSystem Folder
-  deriving Show
-
-makeLenses ''Metadata
+makePrisms ''DocumentType
 makeLenses ''Document
-makeLenses ''FolderContent
-makeLenses ''BinaryTree
+makePrisms ''File
+
+-- a)
+title :: Lens' Metadata String
+title = lens (\(Metadata t _ ) -> t) (\(Metadata _ a) t -> Metadata t a)
+author :: Lens' Metadata String
+author = lens (\(Metadata _ a ) -> a) (\(Metadata t _) a -> Metadata t a)
+-- b)
+example :: File Document
+example = Folder "root" [
+    Folder "home" [
+        Folder "luke" [
+            File $ Doc Text (Metadata ".zshenv" "Luke") "export EDITOR=e",
+            File $ Doc Text (Metadata ".zsh_history" "Luke") "dnf rm java"
+          ]
+      ]
+  ]
+-- example ^. _File . metadata
+-- it throws a type error, as we are using prisms with the lens-view-operator and the
+-- type of the resulting value is not a Monoid.
+-- c)
+instance Semigroup Metadata where
+  (Metadata t1 a1) <> (Metadata t2 a2) = Metadata (t1 <> t2) (a1 <> a2)
+instance Monoid Metadata where
+  mempty = Metadata mempty mempty
+-- d)
+-- example ^? _File . metadata
+-- or
+-- example ^.. _File . metadata
+-- e)
+p :: String -> Document -> Bool
+p s (Doc _ m _) = _title m == s
+searchFile :: String -> [Document] -> Maybe Document
+searchFile s fs = case filter (p s) fs of
+    [] -> Nothing
+    (x:_) -> Just x
+-- f)
+instance Foldable File where
+  foldMap :: Monoid m => (a -> m) -> File a -> m
+  foldMap f (Folder _ fs) = foldMap (foldMap f) fs
+  foldMap f (File doc) = f doc
+-- g)
+-- Nice, there's folded :)
+-- h)
+find s = folded . filtered (p s)

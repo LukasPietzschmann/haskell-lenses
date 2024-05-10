@@ -130,4 +130,94 @@
 				your choice.
 		\end{tasks}
 	\end{exercise}
+
+	\begin{exercise}{We need to go deeper}
+		Now that you feel comfortable with lenses, let's go a little further. In this
+		exercise, we will be working with a file system. I have prepared some ADTs, go
+		take a look at them~\ldots~Alright, let's get started.
+		\begin{tasks}
+			\item We will start simple by creating a lens for each element of the
+				\h{Metadata} ADT. Hint: for now, you can use the \h{lens} function. You
+				can try it without this helper later.
+		\end{tasks}
+		In the following, we will use this as an example:
+		\begin{haskell}
+example :: FileSystem
+example = FileSystem $ Folder "root" [
+    Folder "home" [
+        Folder "luke" [
+            File $ Doc Text (Metadata ".zshenv" "luke") "export EDITOR=e",
+            File $ Doc Text (Metadata ".zsh_history" "luke") "sudo dnf rm java"
+          ]
+      ]
+  ]
+		\end{haskell}
+		\begin{tasks}[resume*]
+			\item Without evaluating it, try to determine what the expression \h{example ^.
+				_File . metadata} would evaluate to?
+			\item If you have not figured the previous task out: it does not evaluate to
+				anything, as there's a type error. Implement a fix for it, without
+				changing the expression.
+			\item How can we change the above expression to fix the error, while not
+				changing what the lens focuses on?
+		\end{tasks}
+		Aren't lenses, prisms, and traversals nice? But for the remaining tasks of this
+		exercise, we need a new thing~\ldots~folds! But don't worry, I will gently introduce you to
+		them.
+
+		Imagine, you want to modify the contents of a specific file, but you don't know
+		it's index and exact path. The only thing you know is its name.\footnote{While
+		this is obviously not true in practice, we will assume that file names are
+		unique in our filesystem.} After the following tasks, you (hopefully) will have
+		written a function, that takes a file name and focuses on that exact file.
+		\begin{tasks}[resume*]
+			\item To get into the right mood, forget lenses for a moment. Let's start by
+				writing a plain old Haskell function \h{searchFile :: String -> [Document]
+				-> Maybe Document} using \h{filter}. For now, we assume that any input to
+				this function is a list with one layer of documents:
+				\begin{haskell}
+example = [
+  Doc Text (Metadata ".zshenv" "luke") "export EDITOR=e",
+  Doc Text (Metadata ".zsh_history" "luke") "sudo dnf rm java"
+]
+				\end{haskell}
+		\end{tasks}
+		Now, we need a way to handle arbitrary nesting depths. We can tackle this by
+		flattening everything into a single list of files. Luckily this is pretty easy.
+		You already know that \h{^..} gives us a list-view of all targets of a
+		traversable, but this operator also works on \h{Fold}s!
+		\begin{tasks}[resume*]
+			\item Implement an instance of \h{Foldable} for \h{File} that folds over all
+				documents in the file hierarchy no matter the depth.
+		\end{tasks}
+		Awesome! Now we can use the \link\h{folded} to
+		https://hackage.haskell.org/package/lens-5.3.1/docs/Control-Lens-Combinators.html\#v:folded;
+		function to build a \h{Fold} from our \h{Foldable} and use \h{^..} to view a
+		flat list of all targets of the fold!
+		\begin{haskell}
+			example ^.. folded
+		\end{haskell}
+		As a last step, we now need a way to filter this list list. And we'll do it in
+		the lens-way.
+		\begin{tasks}[resume*]
+			\item Look through \link Control.Lens.Fold to https://hackage.haskell.org/package/lens-5.3.1/docs/Control-Lens-Fold.html;
+				and search for a function that can be composed with a \h{Fold} and be
+				used for filtering.
+			\item Now use this function like the \h{filter} from task \emph{e)} and
+				compose it with \h{folded} to implement \h{find :: String -> --
+				complicated return type}.
+		\end{tasks}
+		Great, we can now write code like this:
+		\begin{haskell}
+example ^.. find ".zshenv" . content
+-- ["export EDITOR=e"]
+		\end{haskell}
+		By the way, this would also work if our filesystem would contain multiple files
+		with the same name. But since we assumed that this is not the case, we can also
+		use \h{^?} to get a single \h{Maybe} instead of a list.
+		\begin{haskell}
+example ^? find ".zshenv" . metadata . author
+-- Just "Luke"
+		\end{haskell}
+	\end{exercise}
 \end{document}
