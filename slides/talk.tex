@@ -95,8 +95,10 @@
 \newcommand\hn[2][]{\lstinline[language=myhaskell,#1]{#2}}
 \def\inlineblock#1{\tikz[anchor=base,baseline]\node[inner sep=0.3333em,rnd,fill=lightgray!50,anchor=base,baseline=] {#1};}
 \newcommand\h[2][]{\inlineblock{\hn[#1]{#2}}}
-\lstnewenvironment{haskell}{\lstset{language=myhaskell}}{}
 \makeatletter
+\lstnewenvironment{haskell}{\lstset{language=myhaskell}}{}
+\lstnewenvironment{xshaskell}{\lstset{language=myhaskell,basicstyle=\smile@lst@style@base\footnotesize}}{}
+\lstnewenvironment{xxshaskell}{\lstset{language=myhaskell,basicstyle=\smile@lst@style@base\tiny}}{}
 \def\inpuths #1 from #2 to #3;{\lstinputlisting[language=myhaskell,firstline=#2,lastline=#3]{#1}}
 \def\inputhsxs #1 from #2 to #3;{\lstinputlisting[language=myhaskell,firstline=#2,lastline=#3,basicstyle=\smile@lst@style@base\footnotesize]{#1}}
 \def\inputhsxxs #1 from #2 to #3;{\lstinputlisting[language=myhaskell,firstline=#2,lastline=#3,basicstyle=\smile@lst@style@base\tiny]{#1}}
@@ -167,21 +169,19 @@
 	\begin{wide}\vspace{5mm}
 		\begin{haskell}
 			type Lens s t a b = forall f. Functor f => (a -> f b) -> s -> f t
-
-			view :: MonadReader s m => Getting a s a -> m a
-			set  :: ASetter s t a b -> b -> s -> t
 		\end{haskell}
+		\begin{visibleenv}<2->
 		\begin{tikzpicture}[o,node distance=.5ex]
 			\draw[draw=none,top color=white,bottom color=m] (current page.west) rectangle ([yshift=1.8ex]current page.south east);
 
 			\node[q] at ([yshift=-5mm]current page) (Q) {What is the purpose of a lens, according to the types above?};
 			\coordinate (AS) at ([yshift=-1.3cm]Q.south);
 
-			\node[qa,left=of AS,left] (A) {\scriptsize\qn{A:} A package for creating visualizations};
+			\node[qa,left=of AS,left,muted on=<3->] (A) {\scriptsize\qn{A:} A package for creating visualizations};
 			\node[qa,right=of AS,right] (B) {\scriptsize\qn{B:} A tool for handling nested ADTs};
 
-			\node[qa,below=of A] (C) {\scriptsize\qn{C:} A framework for building UIs};
-			\node[qa,below=of B] (D) {\scriptsize\qn{D:} A package for simulating optical lenses};
+			\node[qa,below=of A,muted on=<3->] (C) {\scriptsize\qn{C:} A framework for building UIs};
+			\node[qa,below=of B,muted on=<3->] (D) {\scriptsize\qn{D:} A package for simulating optical lenses};
 
 			\draw[lw,short=-1pt] (A.east) to (B.west);
 			\draw[lw,short=-1pt] (C.east) to (D.west);
@@ -194,8 +194,9 @@
 			\draw[lw,short=-1pt] (B.east) to (B.east -| current page.east);
 			\draw[lw,short=-1pt] (D.east) to (D.east -| current page.east);
 		\end{tikzpicture}
+		\end{visibleenv}
 	\end{wide}
-	\begin{modal}<2|handout:2>
+	\begin{modal}<4|handout:2>
 		\begin{quote}
 			In Haskell, types provide a pretty good explanation of what a function does. Good luck deciphering lens types.
 		\end{quote}\par
@@ -206,8 +207,9 @@
 
 \begin{frame}
 	\frametitle{What are lenses}
-	Well, \enquote{lens} is also a \link package to https://hackage.haskell.org/package/lens;
-	\ldots{} Here are some random functions and operators from that package:\bigskip
+	\uncover<2->{Well, \enquote{lens} is also a \link package to https://hackage.haskell.org/package/lens;}
+	\uncover<3->{\ldots{} Here are some random functions and operators from that package:\bigskip}
+	\begin{visibleenv}<4->
 	\begin{center}
 		\begin{tabular}{lcl}
 		\hline
@@ -216,30 +218,62 @@
 		\hn{over} & \hn{^?!} & \hn{concatOf} \\ \hline
 		\end{tabular}
 	\end{center}\bigskip
-	We'll shortly see what they do and how we can use them.
+	\end{visibleenv}
+	\uncover<5->{We'll shortly see what they do and how we can use them.}
 \end{frame}
 
 \section{Why}
 
-\begin{frame}
+\begin{frame}[fragile]
 	\frametitle{Why do we need them}
+	\onslide<2->%
 	Imagine you want to parse configuration files in Haskell. To model them, you come up
-	with the following ADTs:\bigskip
-	\inpuths examples/example.hs from 1 to 12;
+	with the following ADTs:\par\medskip
+	\onslide<3->%
+	\begin{haskell}
+data File = File {
+  name    :: String,
+  entries :: [Entry]
+}
+data Value = Value {
+  curr :: String,
+  def  :: String
+}
+data Entry = Entry {
+  key   :: String,
+  value :: Value
+}
+	\end{haskell}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Why do we need them}
+	\onslide<2->%
 	Let's say we parsed a file into the following configuration:\bigskip
+	\onslide<3->%
 	\inpuths examples/example.hs from 24 to 28;\bigskip
+	\onslide<4->%
 	Cool, isn't it. Now we want to work with this representation.
 \end{frame}
 
 \begin{frame}[fragile]
 	\frametitle{Why do we need them}
-	\inpuths examples/example.hs from 30 to 41;\medskip
-	Oof, this sucks. And it get's even worse the deeper the ADT gets!
-	\begin{tikzpicture}[o]
+	\begin{haskell}
+		§\onslide<2->§getEntry :: String -> File -> Entry
+		§\onslide<6->§getEntry k = §\onslide<5->§head . §\onslide<4->§filter ((==) k . key) . §\onslide<3->§entries
+
+		§\onslide<7->§getCurrentValue :: Entry -> String
+		§\onslide<10->§getCurrentValue = §\onslide<9->§def . §\onslide<8->§value
+
+		§\onslide<11->§setCurrentValue :: String -> Entry -> Entry
+		§\onslide<12->§setCurrentValue newValue entry = entry {
+			value = (value entry) {
+				curr = newValue
+			}
+		}
+	\end{haskell}\medskip
+	\onslide<13->Oof, this sucks. And it get's even worse the deeper the ADT gets!
+	\onslide<1->\begin{tikzpicture}[o]
 		\node[anchor=west,xshift=2mm,rnd,fill=gray!20,shadow] at (current page.west) (A) {
 			\inputhsxxs examples/example.hs from 1 to 12;
 		};
@@ -248,24 +282,43 @@
 
 \begin{frame}[fragile]
 	\frametitle{Let's reinvent the lens}
-	Let's see, if we can improve this by adding some modifier
+	\onslide<2->Let's see, if we can improve this by adding some modifier
 	functions:\makeatletter\medskip
-	\inputhsxs examples/example.hs from 45 to 56;
-	\begin{tikzpicture}[o]
+	\begin{xshaskell}
+		§\onslide<3->§modifyCurrentValue :: (String -> String) -> Value -> Value
+		§\onslide<4->§modifyCurrentValue f value = value {
+			§\onslide<5->§curr = f $ curr value
+		§\onslide<4->§}
+
+		§\onslide<3->§modifyEntriesValue :: (Value -> Value) -> Entry -> Entry
+		§\onslide<6->§modifyEntriesValue f entry = entry {
+			§\onslide<7->§value = f $ value entry
+		§\onslide<6->§}
+
+		§\onslide<3->§modifyEntriesCurrentValue :: (String -> String) -> Entry -> Entry
+		§\onslide<10->§modifyEntriesCurrentValue = §\onslide<9->§modifyEntriesValue . §\onslide<8->§modifyCurrentValue
+	\end{xshaskell}
+	\onslide<1->\begin{tikzpicture}[o]
 		\node[anchor=west,xshift=2mm,rnd,fill=gray!20,shadow] at (current page.west) (A) {
 			\inputhsxxs examples/example.hs from 1 to 12;
 		};
 	\end{tikzpicture}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
 	\frametitle{Let's reinvent the lens}
-	We can use our modify-functions to implement a setter:
-	\inpuths examples/example.hs from 58 to 59;\bigskip
+	\onslide<2->We can use our modify-functions to implement a setter:
+	\begin{haskell}
+		§\onslide<3->§setCurrentValue' :: String -> Entry -> Entry
+		§\onslide<4->§setCurrentValue' = modifyEntriesCurrentValue§\onslide<5->§ . const
+	\end{haskell}\bigskip\onslide<6->
 
 	The getter is still fine:
-	\inpuths examples/example.hs from 61 to 62;\bigskip
-	\begin{tikzpicture}[o]
+	\begin{haskell}
+		§\onslide<7->§getCurrentValue' :: Entry -> String
+		§\onslide<10->§getCurrentValue' = §\onslide<9->§def . §\onslide<8->§value
+	\end{haskell}\bigskip
+	\onslide<1->\begin{tikzpicture}[o]
 		\node[anchor=west,xshift=2mm,rnd,fill=gray!20,shadow] at (current page.west) (A) {
 			\inputhsxxs examples/example.hs from 1 to 12;
 		};
@@ -274,32 +327,66 @@
 
 \begin{frame}[fragile]
 	\frametitle{Let's reinvent the lens}
-	Now, we can build our lens abstraction:
-	\inputhsxs examples/example.hs from 64 to 67;\medskip
+	\onslide<2->Now, we can build our lens abstraction:
+	\begin{xshaskell}
+		§\onslide<3->§data Lens s a = Lens {
+			§\onslide<4->§get :: s -> a,
+			§\onslide<5->§modify :: (a -> a) -> s -> s
+		§\onslide<3->§}
+	\end{xshaskell}\medskip
 
-	We need to \enquote{reimplement} the function composition:
-	\inputhsxs examples/example.hs from 69 to 73;\medskip
+	\onslide<6->We need to \enquote{reimplement} the function composition:
+	\begin{xshaskell}
+		§\onslide<7->§compose :: Lens a b -> Lens b c -> Lens a c
+		§\onslide<8->§compose (Lens g m) (Lens g' m') = Lens {
+			§\onslide<9->§get = g' . g,
+			§\onslide<10->§modify = m . m'
+		§\onslide<8->§}
+	\end{xshaskell}\medskip
 
-	For easier handling, we also define \h{set} as a little helper:
-	\inputhsxs examples/example.hs from 75 to 76;
+	\onslide<11->For easier handling, we also define \h{set} as a little helper:
+	\begin{xshaskell}
+		§\onslide<12->§set :: Lens s a -> a -> s -> s
+		§\onslide<13->§set (Lens _ modify) = modify§\onslide<14->§ . const
+	\end{xshaskell}
 \end{frame}
 
 \begin{frame}[fragile]
 	\frametitle{Let's reinvent the lens}
-	Finally, we can build lenses for our ADTs:\makeatletter\medskip
-	\inputhsxs examples/example.hs from 78 to 91;
-	\begin{tikzpicture}[o]
+	\onslide<2->Finally, we can build lenses for our ADTs:\makeatletter\medskip
+	\begin{xshaskell}
+		§\onslide<3->§currentValueL :: Lens Value String
+		§\onslide<4->§currentValueL = Lens {
+			§\onslide<5->§get = curr,
+			§\onslide<6->§modify = \f value -> value { curr = f $ curr value }
+		§\onslide<4->§}
+
+		§\onslide<7->§entryValueL :: Lens Entry Value
+		§\onslide<8->§entryValueL = Lens {
+			§\onslide<9->§get = value,
+			§\onslide<10->§modify = \f entry -> entry { value = f $ value entry }
+		§\onslide<8->§}
+
+		§\onslide<11->§entryCurrentValueL :: Lens Entry String
+		§\onslide<12->§entryCurrentValueL = entryValueL§\onslide<13->§ `compose` currentValueL
+	\end{xshaskell}
+	\onslide<1->\begin{tikzpicture}[o]
 		\node[anchor=west,xshift=2mm,rnd,fill=gray!20,shadow] at (current page.west) (A) {
 			\inputhsxxs examples/example.hs from 1 to 12;
 		};
 	\end{tikzpicture}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
 	\frametitle{Let's reinvent the lens}
-	Now we only have to plug our lens into \h{set}, \h{get}, or \h{modify}:
-	\inpuths examples/example.hs from 93 to 94;
-	\inpuths examples/example.hs from 96 to 97;
+	\onslide<2->Now we only have to plug our lens into \h{set}, \h{get}, or \h{modify}:
+	\begin{haskell}
+		§\onslide<3->§setCurrentValue'' :: String -> Entry -> Entry
+		§\onslide<4->§setCurrentValue'' = set §\onslide<5->§entryCurrentValueL
+
+		§\onslide<6->§getCurrentValue'' :: Entry -> String
+		§\onslide<7->§getCurrentValue'' = get §\onslide<8->§entryCurrentValueL
+	\end{haskell}
 \end{frame}
 
 \begin{frame}
@@ -309,9 +396,9 @@
 
 \begin{frame}[fragile]
 	\frametitle{Let's reinvent the lens}
-	Puh, that was kinda complicated. But again, think of how much less code you have to
+	\onslide<2->Puh, that was kinda complicated. But again, think of how much less code you have to
 	write:\par
-	\begin{sblock}[versus]
+	\onslide<3->\begin{sblock}[versus]
 		\begin{haskell}
 			let f = _foo v
 				b = _bar f
@@ -322,26 +409,28 @@
 					} } }
 		\end{haskell}
 		\tcblower
+		\begin{visibleenv}<4->
 		\begin{haskell}
 			v & foo . bar . baz +~ 1
 		\end{haskell}
+		\end{visibleenv}
 	\end{sblock}
-	We can now think \enquote{How can I traverse through this?} instead of \enquote{How do
+	\onslide<5->We can now think \enquote{How can I traverse through this?} instead of \enquote{How do
 	I un- and repack all of this?}.
 \end{frame}
 
 \begin{frame}[fragile]
 	\frametitle{Let's reinvent the lens}
-	Our solution looks more flexible than what we had before. But there are still some
+	\onslide<2->Our solution looks more flexible than what we had before. But there are still some
 	problems:\bigskip
-	\begin{itemize}
+	\begin{itemize}[<+(2)->]
 		\item Still feels a bit clunky and boilerplate-heavy
 		\item We always have to create \h{Lens} values
 		\item No support for polymorphic updates
 	\end{itemize}\bigskip
-	It's definitely not impossible to overcome these limitations, but we'll skip this
+	\onslide<7->It's definitely not impossible to overcome these limitations, but we'll skip this
 	for now.
-	\begin{modal}<2|handout:2>[\footnotesize Polymorphic Update]
+	\onslide<1->\begin{modal}<6|handout:2>[\footnotesize Polymorphic Update]
 		\begin{haskell}
 			data Pair a b = Pair {e1 :: a, e2 :: b}
 
@@ -357,12 +446,12 @@
 
 \begin{frame}
 	\frametitle[Revisited]{What are lenses}
-	Lenses are:
-	\begin{itemize}
+	\onslide<2->Lenses are:
+	\begin{itemize}[<+(2)->]
 		\item A way to \emph{focus} on a part of a data structure
 	\end{itemize}\bigskip
-	Or more precisely:
-	\begin{itemize}
+	\onslide<4->Or more precisely:
+	\begin{itemize}[<+(3)->]
 		\item Just another abstraction
 		\item Functional references
 		\item Getters and Setters
@@ -392,12 +481,12 @@
 	\begin{tikzpicture}[remember picture,overlay]
 		\coordinate (S) at ([shift={(-2mm,1.5mm)}]pic cs:b);
 		\coordinate (E) at ([shift={(-2mm,0cm)}]pic cs:d);
-		\draw[lw,visible on=<4->] (S) -- (E);
-		\draw[dashed,lw,visible on=<4->] (E) -- ([yshift=-1cm]E);
-		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<4->] at (S) {};
+		\draw[lw,visible on=<2->] (S) -- (E);
+		\draw[dashed,lw,visible on=<2->] (E) -- ([yshift=-1cm]E);
+		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<2->] at (S) {};
 		% \node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<5->] at ([shift={(-2mm,1.5mm)}]pic cs:b) {};
-		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<6->] at ([shift={(-2mm,1.5mm)}]pic cs:c) {};
-		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<7->] at ([shift={(-2mm,1.5mm)}]pic cs:d) {};
+		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<3->] at ([shift={(-2mm,1.5mm)}]pic cs:c) {};
+		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<4->] at ([shift={(-2mm,1.5mm)}]pic cs:d) {};
 	\end{tikzpicture}
 \end{frame}
 
@@ -415,11 +504,11 @@
 	\begin{tikzpicture}[remember picture,overlay]
 		\coordinate (S) at ([shift={(-2mm,1.5mm)}]pic cs:e);
 		\coordinate (E) at ([shift={(-2mm,-1.1cm)}]pic cs:g);
-		\draw[dashed,lw,visible on=<4->] ([yshift=7.5mm]S) -- (S);
-		\draw[-{Latex[round,accent]},lw,visible on=<4->] (S) -- (E);Turned Square
-		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<4->] at (S) {};
-		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<5->] at ([shift={(-2mm,1.5mm)}]pic cs:f) {};
-		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<5->] at ([shift={(-2mm,1.5mm)}]pic cs:g) {};
+		\draw[dashed,lw,visible on=<2->] ([yshift=7.5mm]S) -- (S);
+		\draw[-{Latex[round,accent]},lw,visible on=<2->] (S) -- (E);Turned Square
+		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<2->] at (S) {};
+		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<3->] at ([shift={(-2mm,1.5mm)}]pic cs:f) {};
+		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<4->] at ([shift={(-2mm,1.5mm)}]pic cs:g) {};
 	\end{tikzpicture}
 \end{frame}
 
@@ -428,22 +517,24 @@
 
 \begin{frame}
 	\frametitle{A little Overview}
-	Lenses basically provide two kinds of operations:
-	\begin{itemize}
+	\onslide<2->Lenses basically provide two kinds of operations:
+	\begin{itemize}[<+(2)->]
 		\item \hn{view :: Lens' a b -> a -> b}
 		\item \hn{set :: Lens' a b -> b -> a -> a}
-	\end{itemize}\medskip
+	\end{itemize}\medskip\onslide<5->
 	To use them, we need the actual lens. It determines what part of the structure
 	we want to focus on.
-	\begin{itemize}
+	\begin{itemize}[<+(3)->]
 		\item \hn{_1 :: Lens' (a,b) a}
 		\item \hn{_2 :: Lens' (a,b) b}
-	\end{itemize}\medskip
+	\end{itemize}\medskip\onslide<8->
 	With all that in place, we can now combine the operation with a lens (or a
 	combination of lenses) and data:
 	\begin{itemize}
-		\item \doul{red}{\hn{set}} \doul{blue}{\hn{_2}} \doul{green}{\hn{"cool"}} \doul{green}{\hn{("FP is", "")}}\kern8pt\ergo\kern8pt\hn{("FP is", "cool")}
-		\item \doul{red}{\hn{view}} \doul{blue}{\hn{_1}} \doul{green}{\hn{("hi", "there")}}\kern8pt\ergo\kern8pt\hn{"hi"}
+		\item<9-> \hn{set _2 "cool" ("FP is", "")}\onslide<10->\kern8pt\ergo\kern8pt\hn{("FP is", "cool")}
+		\item<11-> \hn{view _1 ("hi", "there")}\onslide<12->\kern8pt\ergo\kern8pt\hn{"hi"}
+		% \item \doul{red}{\hn{set}} \doul{blue}{\hn{_2}} \doul{green}{\hn{"cool"}} \doul{green}{\hn{("FP is", "")}}\kern8pt\ergo\kern8pt\hn{("FP is", "cool")}
+		% \item \doul{red}{\hn{view}} \doul{blue}{\hn{_1}} \doul{green}{\hn{("hi", "there")}}\kern8pt\ergo\kern8pt\hn{"hi"}
 	\end{itemize}%
 \end{frame}
 
@@ -451,53 +542,54 @@
 
 \begin{frame}
 	\frametitle{Lens Laws}
-	Like with functors, applicatives, and monads, lenses \emph{should} follow some
+	\onslide<2->Like with functors, applicatives, and monads, lenses \emph{should} follow some
 	rules:
-	\begin{enumerate}
+	\begin{enumerate}[<+(2)->]
 		\item Get-Put
 		\item Put-Get
 		\item Put-Put
 	\end{enumerate}
-	We'll look at them in a bit more detail.
+	\onslide<6->We'll look at them in a bit more detail.
 \end{frame}
 
 \begin{frame}[fragile]
 	\frametitle[Get-Put]{Lens Laws}
-	If you modify something by changing its subpart to exactly what it was before,
+	\onslide<2->If you modify something by changing its subpart to exactly what it was before,
 	nothing should happen.\bigskip
-	\begin{haskell}
+	\onslide<3->\begin{haskell}
 		set entryCurrentValueL (get entryCurrentValueL entry) entry == entry
 	\end{haskell}\bigskip
-	\ergo{} Our lens should not modify the value or structure by itself.
+	\onslide<4->\ergo{} Our lens should not modify the value or structure by itself.
 \end{frame}
 
 \begin{frame}[fragile]
 	\frametitle[Put-Get]{Lens Laws}
-	If you modify something by inserting a particular subpart and then view the result,
+	\onslide<2->If you modify something by inserting a particular subpart and then view the result,
 	you'll get back exactly that subpart.\bigskip
-	\begin{haskell}
+	\onslide<3->\begin{haskell}
 		get entryCurrentValueL (set entryCurrentValueL "a" entry) == "a"
 	\end{haskell}\bigskip
-	\ergo{} The Lens should perform the update.
+	\onslide<4->\ergo{} The Lens should perform the update.
 \end{frame}
 
 \begin{frame}[fragile]
 	\frametitle[Put-Put]{Lens Laws}
-	If you modify something by inserting a particular subpart \h{a}, and then modify it
+	\onslide<2->If you modify something by inserting a particular subpart \h{a}, and then modify it
 	again inserting a different subpart \h{b}, it's exactly as if you only did the
 	second insertion.\bigskip
-	\begin{haskell}
+	\onslide<3->\begin{haskell}
 		set entryCurrentValueL "b" (set entryCurrentValueL "a" entry) == set entryCurrentValueL "b" entry
 	\end{haskell}\bigskip
-	\ergo{} Previous updates should not leave any traces.
+	\onslide<4->\ergo{} Previous updates should not leave any traces.
 \end{frame}
 
 \begin{frame}
 	\frametitle{Do I really have to follow them?}
-	\begin{itemize}
+	\begin{itemize}[<+(1)->]
 		\item Yes, you should! Otherwise your lenses might behave weird.
+		\item And weird unpredictable things are for OOP \emoji{wink}
 	\end{itemize}\bigskip
-	\begin{itemize}
+	\begin{itemize}[<+(1)->]
 		\item But, we can get around them
 		\item In fact, we can get around the whole process of creating a lens by
 			hand
