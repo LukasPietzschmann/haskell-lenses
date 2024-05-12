@@ -428,7 +428,7 @@ data Entry = Entry {
 		\item We always have to create \h{Lens} values
 		\item No support for polymorphic updates
 	\end{itemize}\bigskip
-	\onslide<7->It's definitely not impossible to overcome these limitations, but we'll skip this
+	\onslide<8->It's definitely not impossible to overcome these limitations, but we'll skip this
 	for now.
 	\onslide<1->\begin{modal}<6|handout:2>[\footnotesize Polymorphic Update]
 		\begin{haskell}
@@ -481,8 +481,8 @@ data Entry = Entry {
 	\begin{tikzpicture}[remember picture,overlay]
 		\coordinate (S) at ([shift={(-2mm,1.5mm)}]pic cs:b);
 		\coordinate (E) at ([shift={(-2mm,0cm)}]pic cs:d);
-		\draw[lw,visible on=<2->] (S) -- (E);
-		\draw[dashed,lw,visible on=<2->] (E) -- ([yshift=-1cm]E);
+		\draw[lw] (S) -- (E);
+		\draw[dashed,lw] (E) -- ([yshift=-1cm]E);
 		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<2->] at (S) {};
 		% \node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<5->] at ([shift={(-2mm,1.5mm)}]pic cs:b) {};
 		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<3->] at ([shift={(-2mm,1.5mm)}]pic cs:c) {};
@@ -504,8 +504,8 @@ data Entry = Entry {
 	\begin{tikzpicture}[remember picture,overlay]
 		\coordinate (S) at ([shift={(-2mm,1.5mm)}]pic cs:e);
 		\coordinate (E) at ([shift={(-2mm,-1.1cm)}]pic cs:g);
-		\draw[dashed,lw,visible on=<2->] ([yshift=7.5mm]S) -- (S);
-		\draw[-{Latex[round,accent]},lw,visible on=<2->] (S) -- (E);Turned Square
+		\draw[dashed,lw] ([yshift=7.5mm]S) -- (S);
+		\draw[-{Latex[round,accent]},lw] (S) -- (E);
 		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<2->] at (S) {};
 		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<3->] at ([shift={(-2mm,1.5mm)}]pic cs:f) {};
 		\node[roundnode,fill=accent,draw=accent,inner sep=1.5pt,visible on=<4->] at ([shift={(-2mm,1.5mm)}]pic cs:g) {};
@@ -597,22 +597,34 @@ data Entry = Entry {
 	\end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
 	\frametitle{Do I really have to follow them?}
-	\inpuths examples/example2.hs from 1 to 11;
+	\begin{haskell}
+		§\onslide<2->§{-# LANGUAGE TemplateHaskell #-}
+
+		§\onslide<3->§import Control.Lens
+
+		§\onslide<4->§data File  = File  {_name :: String, _entries :: [Entry]}
+		§\onslide<4->§data Entry = Entry {_key  :: String, _value   :: Value  }
+		§\onslide<4->§data Value = Value {_curr :: String, _def     :: String }
+
+		§\onslide<5->§makeLenses ''File
+		§\onslide<5->§makeLenses ''Entry
+		§\onslide<5->§makeLenses ''Value
+	\end{haskell}
 \end{frame}
 
 \subsection{The actual Package}
 
 \begin{frame}
 	\frametitle{The lens Package}
-	\begin{itemize}
+	\begin{itemize}[<+(1)->]
 		\item Until now, we have only used \h{view} and \h{set}
 		\item But there are actually a lot more functions and operators
 		\item I mean a loooooooooooooooooot; easily over 100
 	\end{itemize}\bigskip
 	\begin{itemize}
-		\item Let's try to find a pattern in their names
+		\item<5-> Let's try to find a pattern in their names
 	\end{itemize}
 \end{frame}
 
@@ -620,47 +632,47 @@ data Entry = Entry {
 	\frametitle{The lens Package}
 	\begin{wide}
 	\begin{columns}[c]
-		\begin{column}{0.45\textwidth}
+		\begin{column}<2->{0.45\textwidth}
 			\begin{block}
 			Operators beginning with \h{^} behave like \h{view} functions:
 			\begin{haskell}
-				Value "c" "d" ^. def §\ergo~\texttt{"d"}§
-				(1,2) ^.. both §\ergo~\texttt{[1,2]}§
-				Right 42 ^? _Left §\ergo~\texttt{Nothing}§
+				§\onslide<3->§Value "c" "d" ^. def §\onslide<4->\ergo~\texttt{"d"}§
+				§\onslide<5->§(1,2) ^.. both §\onslide<6->\ergo~\texttt{[1,2]}§
+				§\onslide<7->§Right 42 ^? _Left §\onslide<8->\ergo~\texttt{Nothing}§
 			\end{haskell}
 			\end{block}
 		\end{column}
-		\begin{column}{0.45\textwidth}
+		\begin{column}<9->{0.45\textwidth}
 			\begin{block}
-				Operators ending in \inlineblock{\string~\rlap{\phantom{t}}} behave like \h{set} functions:
+			Operators ending in \inlineblock{\string~\rlap{\phantom{t}}} behave like \h{set} functions:
 			\begin{haskell}
-				(_2 .~ 3) (0, 0) §\ergo~\texttt{(0,3)}§
-				(_2 +~ 3) (0, 39) §\ergo~\texttt{(0,42)}§
-				(_1 %~ (+1)) (3,2) §\ergo~\texttt{(4,2)}§
+				§\onslide<10->§(_2 .~ 3) (0, 0) §\onslide<11->\ergo~\texttt{(0,3)}§
+				§\onslide<12->§(_2 +~ 3) (0, 39) §\onslide<13->\ergo~\texttt{(0,42)}§
+				§\onslide<14->§(_1 %~ (+1)) (3,2) §\onslide<15->\ergo~\texttt{(4,2)}\onslide<1->§
 			\end{haskell}
 			\end{block}
 		\end{column}
 	\end{columns}\bigskip
-	Writing \h{lens .~ value $ adt} every time is not very nice. But as always, there's
+	\onslide<16->Writing \h{lens .~ value $ adt} every time is not very nice. \onslide<17->But as always, there's
 	a special operator to our rescue: \h{& :: a -> (a -> b) -> b}.
 	\end{wide}
 \end{frame}
 
 \begin{frame}[fragile]
 	\frametitle{The lens Package}
-	With this knowledge aquired, we can finally write concise Haskell-code:\par\medskip
+	\onslide<2->With this knowledge aquired, we can finally write concise Haskell-code:\par\medskip
 	\begin{haskell}
-		(6, 2) & both *~ 7 §\ergo~\texttt{(42, 14)}§
+		§\onslide<6->§(6, 2) & §\onslide<4->§both §\onslide<3->§*~ §\onslide<5->§7 §\onslide<7->\ergo~\texttt{(42, 14)}§
 	\end{haskell}\medskip
 	\begin{haskell}
-		lens = entries . _last . value . curr
-		val = config ^?! lens §\ergo~\texttt{"88"} §
-		config & lens .~ val ++ "0" §\ergo~\texttt{curr = "880" \color{gray}inside config}§
-		over lens (++"0") config §\ergo~\texttt{curr = "880" \color{gray}inside config}§
-	\end{haskell}\medskip
+		§\onslide<8->§lens = §\onslide<9->§entries §\onslide<10->§. _last§\onslide<11->§ . value§\onslide<12->§ . curr
+		§\onslide<13->§val =§\onslide<15->§ config§\onslide<14->§ ^?!§\onslide<16->§ lens §\onslide<17->\ergo~\texttt{"88"} §
+		§\onslide<21->§config &§\onslide<19->§ lens §\onslide<18->§.~ §\onslide<20->§val ++ "0" §\onslide<22->\ergo~\texttt{curr = "880" \color{gray}inside config}§
+		§\onslide<23->§over §\onslide<24->§lens §\onslide<25->§(++"0")§\onslide<26->§ config §\onslide<27->\ergo~\texttt{curr = "880" \color{gray}inside config}§
+	\end{haskell}\medskip\onslide<28->
 	\begin{haskell}
-		(0, "upd.") & _1 .~ "poly." §\ergo~\texttt{("poly.", "upd.")}§
-	\end{haskell}
+		(0, "upd.") & _1 .~ "poly." §\onslide<29->\ergo~\texttt{("poly.", "upd.")}§
+	\end{haskell}\onslide<1->
 	\begin{tikzpicture}[o]
 		\node[anchor=west,xshift=7mm,rnd,fill=gray!20,shadow] at (current page.west) (A) {
 			\rotatebox{90}{\inputhsxxs examples/example.hs from 24 to 28;}
@@ -683,48 +695,48 @@ data Entry = Entry {
 \tikzset{c/.style={arrow,short=1mm,draw=lightgray,dashed}}
 \begin{frame}
 	\frametitle[Gotchas]{The lens Package}
-	You might have notices that lenses compose backwards:\par
+	\onslide<2->You might have notices that lenses compose backwards:\par\onslide<1->
 	\begin{center}
 	\begin{tikzpicture}[node distance=7mm]
-		\node[roundednode,draw=none,shadow,fill=gray!20] (A) {\strut\hn{entries}};
-		\node[roundednode,draw=none,shadow,fill=gray!20,right=of A] (B) {\strut\hn{_last}};
-		\node[roundednode,draw=none,shadow,fill=gray!20,right=of B] (C) {\strut\hn{value}};
-		\node[roundednode,draw=none,shadow,fill=gray!20,right=of C] (D) {\strut\hn{curr}};
-		\node[left=of A] (AA) {};
+		\onslide<3->\node[roundednode,draw=none,shadow,fill=gray!20] (A) {\strut\hn{entries}};
+		\onslide<4->\node[roundednode,draw=none,shadow,fill=gray!20,right=of A] (B) {\strut\hn{_last}};
+		\onslide<5->\node[roundednode,draw=none,shadow,fill=gray!20,right=of B] (C) {\strut\hn{value}};
+		\onslide<6->\node[roundednode,draw=none,shadow,fill=gray!20,right=of C] (D) {\strut\hn{curr}};
+		\onslide<1->\node[left=of A] (AA) {};
 		\node[right=of D] (DD) {};
 
 		\begin{scope}[transform canvas={yshift=1.2mm}]
-			\draw[b] (AA) to (A);
-			\draw[b] (A) to (B);
-			\draw[b] (B) to (C);
-			\draw[b] (C) to (D);
-			\draw[b] (D) to (DD);
+			\draw[b,visible on=<12->] (AA) to (A);
+			\draw[b,visible on=<13->] (A) to (B);
+			\draw[b,visible on=<14->] (B) to (C);
+			\draw[b,visible on=<15->] (C) to (D);
+			\draw[b,visible on=<16->] (D) to (DD);
 		\end{scope}
 
 		\begin{scope}[transform canvas={yshift=-1.2mm}]
-			\draw[c] (DD) to (D);
-			\draw[c] (D) to (C);
-			\draw[c] (C) to (B);
-			\draw[c] (B) to (A);
-			\draw[c] (A) to (AA);
+			\draw[c,visible on=<7->] (DD) to (D);
+			\draw[c,visible on=<8->] (D) to (C);
+			\draw[c,visible on=<9->] (C) to (B);
+			\draw[c,visible on=<10->] (B) to (A);
+			\draw[c,visible on=<11->] (A) to (AA);
 		\end{scope}
 
 		\coordinate (X) at ($(B)!.5!(C)$);
-		\node[above=of X,yshift=-2mm] {\small\color{green}lens};
-		\node[below=of X,yshift=2mm] {\small\color{lightgray}Haskell};
+		\node[above=of X,yshift=-2mm,visible on=<12->] {\small\color{green}lens};
+		\node[below=of X,yshift=2mm,visible on=<7->] {\small\color{lightgray}Haskell};
 	\end{tikzpicture}
 	\end{center}\par
-	This makes it weird for FP-enjoyers, but intuitive for OOP-weirdos.\par
-	The same applies for all kinds of operators:\par
-	\begin{center}
+	\onslide<17->This makes it weird for FP-enjoyers, but intuitive for OOP-weirdos.\par
+	\onslide<20->The same applies for all kinds of operators:\par
+	\onslide<21->\begin{center}
 		\begin{tabular}{c|c}
 			lens & Haskell\\
 			\hline\hline
 			\hn{5 & (+1)} & \hn{(+1) $ 5}\\
 			\hn{Just 5 <&> (+1)} & \hn{(+1) <$> (Just 5)}\\
 		\end{tabular}
-	\end{center}
-	\begin{modal}<2|handout:2>
+	\end{center}\onslide<1->
+	\begin{modal}<18|handout:2>
 		\begin{quote}
 			Backward composition of lenses. It’s a minor issue, and I wouldn’t mention
 			it if it wasn’t a great demonstration of how lens goes against the
@@ -736,9 +748,9 @@ data Entry = Entry {
 
 \begin{frame}
 	\frametitle[Getters]{The lens Package}
-	Writing a \emph{Getter} is really easy. We can simply promote any \emph{function} or
+	\onslide<2->Writing a \emph{Getter} is really easy. We can simply promote any \emph{function} or
 	\emph{value} to a Getter.\par\bigskip
-	\begin{itemize}\setlength\itemsep{10pt}
+	\begin{itemize}[<+(2)->]\setlength\itemsep{10pt}
 		\item \h{to} builds a Getter from any function\par\medskip
 			\hn{("Hello", "FP2") ^. to snd}\quad\ergo\quad\hn{"FP2"}
 		\item \h{like} always returns a constant value\par\medskip
@@ -748,9 +760,9 @@ data Entry = Entry {
 
 \begin{frame}
 	\frametitle[Setters]{The lens Package}
-	Writing a \emph{Setter} is only slightly more complicated, as we don't set the value
+	\onslide<2->Writing a \emph{Setter} is only slightly more complicated, as we don't set the value
 	directly, but apply a function on the focused part.\par\bigskip
-	\begin{itemize}\setlength\itemsep{10pt}
+	\begin{itemize}[<+(2)->]\setlength\itemsep{10pt}
 		\item \h{setting} receives a function, that applies another function to the
 			correct value inside a structure\par\medskip
 			\hn{(4,1) & setting (\\f (x,y) -> (x,f y)) .~ 2}\quad\ergo\quad\hn{(4,2)}
@@ -762,6 +774,7 @@ data Entry = Entry {
 
 \begin{frame}[fragile]
 	\frametitle[Getter + Setter]{The lens Package}
+	\color{red}\textbf{Redo this: \url{https://vrom911.github.io/blog/write-yourself-a-lens}}
 	Having a separate Getter and Setter is not always desirable. Now, we want to create
 	our own lens that we can use as both Getter and Setter. This time, \h{makeLenses}
 	doesn't count!\par\bigskip
@@ -783,17 +796,17 @@ data Entry = Entry {
 \subsection{Virtual lenses}
 \begin{frame}[fragile]
 	\frametitle{Virtual lenses}
-	A Getter does not always have to be backed by an actual structure. Theoretically, it
+	\onslide<2->A Getter does not always have to be backed by an actual structure. Theoretically, it
 	can return \emph{anything}:
-	\begin{lstlisting}[language=ts]
+	\onslide<3->\begin{lstlisting}[language=ts]
 		get virtualProp(): number {
 			return 42
 		}
 	\end{lstlisting}\bigskip
-	We can easily achieve this behavior with lenses, too:
+	\onslide<4->We can easily achieve this behavior with lenses, too:
 	\begin{haskell}
-		virtualProp = like 42
-		(0,0) ^. virtualProp §\ergo~\texttt{42}§
+		§\onslide<5->§virtualProp = like 42
+		§\onslide<8->§(0,0) §\onslide<6->§^.§\onslide<7->§ virtualProp §\onslide<9->\ergo~\texttt{42}§
 	\end{haskell}
 \end{frame}
 
@@ -806,26 +819,31 @@ data Entry = Entry {
 	% 	\tcblower
 	% 	Prisms reference something that \emph{may} exist.
 	% \end{sblock}\bigskip
-	So far, we only looked at product types. But what about sum types? Prisms to the
+	\onslide<2->So far, we only looked at product types. But what about sum types? Prisms to the
 	rescue!\par\bigskip
-	\inpuths examples/prism.hs from 5 to 9;
 	\begin{haskell}
-		meal1 ^? _MainCourse . _2 . _Dessert §\ergo~\texttt{Just "Pudding"}§
-		meal2 ^? _MainCourse . _2 . _Dessert §\ergo~\texttt{Nothing}§
-	\end{haskell}
-	\begin{haskell}
-		meal1 &  _MainCourse . _2 . _Dessert .~ "Yogurt"
+§\onslide<3->§data CanteenMeal = MainCourse String CanteenMeal
+                 | Desert String
+
+§\onslide<4->§meal1 = MainCourse "Sattmacher" (Desert "Pudding")
+§\onslide<5->§meal2 = Desert "Yogurt"
+
+§\onslide<8->§meal1 §\onslide<6->§^?§\onslide<7->§ _MainCourse . _2 . _Dessert §\onslide<9->\ergo~\texttt{Just "Pudding"}§
+§\onslide<10->§meal2 ^? _MainCourse . _2 . _Dessert §\onslide<11->\ergo~\texttt{Nothing}§
+
+§\onslide<15->§meal1 &  §\onslide<13->§_MainCourse . _2 . _Dessert §\onslide<12->§.~ §\onslide<14->§"Yogurt"
+§\onslide<16->\ergo~\texttt{Desert "Yogurt" \color{gray}inside meal1}§
 	\end{haskell}
 \end{frame}
 
 \begin{frame}[fragile]
 	\frametitle{Prisms}
-	\begin{itemize}
+	\begin{itemize}[<+(1)->]
 		\item We already used a prism: remember \h{_last}?
 		\item We can usually use them like a normal lens (there's just a little
 			\h{Maybe} in the way)
 	\end{itemize}\medskip
-	\begin{block}[versus]
+	\onslide<4->\begin{block}[versus]
 		\begin{haskell}
 			case meal1 of
 				MainCouse _ (Dessert d) -> MainCourse {
@@ -833,7 +851,7 @@ data Entry = Entry {
 				_ -> meal1
 		\end{haskell}
 		\tcblower
-		\hn{meal1 &  _MainCourse . _2 . _Dessert .~ "Yogurt"}
+		\onslide<5->{\hn{meal1 &  _MainCourse . _2 . _Dessert .~ "Yogurt"}}
 	\end{block}
 \end{frame}
 
@@ -869,22 +887,23 @@ data Entry = Entry {
 		\draw[lw,short=-1pt] (A.east) to (B.west);
 		\draw[lw,short=-1pt] (C.east) to (D.west);
 	\end{tikzpicture}}
-	Wouldn't it be nice to have a lens that focuses on any element of a traversable
-	container? Let's start with every element of the list:
+	\onslide<2->Wouldn't it be nice to have a lens that focuses on a specific element of
+	a traversable container? Let's start with every element:
 	\begin{haskell}
-		["Hello", "there"] ^. traverse §\ergo~\texttt{"Hellothere"}§
+		§\onslide<5->§["Hello", "there"] §\onslide<3->§^.§\onslide<4->§ traverse §\onslide<8->\ergo~\texttt{"Hellothere"}§
 	\end{haskell}\bigskip
-	Huh?! What's that? I would've expected \texttt{["Hello", "there"]}.\par
-	When viewing the result of \h{traverse}, it gets shoved through \h{mappend} first. That's why you typically use
-	traversal's own view-operator \h{^..}.
+	\onslide<9->Huh?! What's that? I would've expected \texttt{["Hello", "there"]}.\par
+	\onslide<10->When viewing the result of \h{traverse}, it gets shoved through
+	\h{mappend} first. \onslide<11->That's why you typically use traversal's own view-operator
+	\h{^..}.
 	% allOf (traverse . _2) even [(1,2),(3,4)] §\ergo~\texttt{True}§
 	\begin{haskell}
-		[1..5] ^.. traverse §\ergo~\texttt{[1,2,3,4,5]}§
-		[(1,2),(3,4)] ^.. traverse . _2 §\ergo~\texttt{[1,3]}§
+		§\onslide<14->§[1..5] §\onslide<12->§^..§\onslide<13->§ traverse §\onslide<15->\ergo~\texttt{[1,2,3,4,5]}§
+		§\onslide<16->§[(1,2),(3,4)] ^.. traverse . _2 §\onslide<17->\ergo~\texttt{[1,3]}§
 
-		[1..5] & traverse +~ 1 §\ergo~\texttt{[2,3,4,5,6]}§
-	\end{haskell}
-	\begin{modal}<2|handout:2>
+		§\onslide<21->§[1..5] & §\onslide<19->§traverse §\onslide<18->§+~§\onslide<20->§ 1 §\onslide<22->\ergo~\texttt{[2,3,4,5,6]}§
+	\end{haskell}\onslide<1->
+	\begin{modal}<6|handout:2>
 		\scalebox{0.9}{\usebox\wwm}
 	\end{modal}
 	% \begin{modal}<2|handout:2>[Folds]
@@ -919,15 +938,8 @@ data Entry = Entry {
 \subsection{Isos}
 \begin{frame}
 	\frametitle{Isos}
-	\begin{wide}
-		\centering\Large\bfseries There are also Isos! You can look them up by yourself~:)
-	\end{wide}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Isos}
-	Just kidding \emoji{wink} Here's a very short summary:
-	\begin{itemize}
+	\onslide<2->Here's a very short summary:
+	\begin{itemize}[<+(2)->]
 		\item An \h{Iso} is a connection between two types that are equivalent in every way
 		\item Isos should follow the following laws:\par
 			\hn{forward . backward = id}\par
@@ -939,14 +951,14 @@ data Entry = Entry {
 \begin{frame}[fragile]
 	\frametitle{Isos}
 	\begin{haskell}
-		maybeToEither = maybe (Left ()) Right
-		eitherToMaybe = either (const Nothing) Just
+		§\onslide<2->§maybeToEither = maybe (Left ()) Right
+		§\onslide<3->§eitherToMaybe = either (const Nothing) Just
 
-		someIso :: Iso' (Maybe a) (Either () a)
-		someIso = iso maybeToEither eitherToMaybe
+		§\onslide<4->§someIso :: Iso' (Maybe a) (Either () a)
+		§\onslide<5->§someIso = iso §\onslide<6->§maybeToEither §\onslide<7->§eitherToMaybe
 
-		Just "hi" ^. someIso §\ergo~\texttt{Right "hi"}§
-		Left "ho" ^. from someIso §\ergo~\texttt{Nothing}§
+		§\onslide<10->§Just "hi" §\onslide<8->§^. §\onslide<9->§someIso §\onslide<11->\ergo~\texttt{Right "hi"}§
+		§\onslide<12->§Left "ho" ^. from someIso §\onslide<13->\ergo~\texttt{Nothing}§
 	\end{haskell}
 \end{frame}
 
