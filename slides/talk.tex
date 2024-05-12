@@ -177,11 +177,11 @@
 			\node[q] at ([yshift=-5mm]current page) (Q) {What is the purpose of a lens, according to the types above?};
 			\coordinate (AS) at ([yshift=-1.3cm]Q.south);
 
-			\node[qa,left=of AS,left,muted on=<3->] (A) {\scriptsize\qn{A:} A package for creating visualizations};
+			\node[qa,left=of AS,left,muted on=<3-|handout:2->] (A) {\scriptsize\qn{A:} A package for creating visualizations};
 			\node[qa,right=of AS,right] (B) {\scriptsize\qn{B:} A tool for handling nested ADTs};
 
-			\node[qa,below=of A,muted on=<3->] (C) {\scriptsize\qn{C:} A framework for building UIs};
-			\node[qa,below=of B,muted on=<3->] (D) {\scriptsize\qn{D:} A package for simulating optical lenses};
+			\node[qa,below=of A,muted on=<3-|handout:2->] (C) {\scriptsize\qn{C:} A framework for building UIs};
+			\node[qa,below=of B,muted on=<3-|handout:2->] (D) {\scriptsize\qn{D:} A package for simulating optical lenses};
 
 			\draw[lw,short=-1pt] (A.east) to (B.west);
 			\draw[lw,short=-1pt] (C.east) to (D.west);
@@ -196,7 +196,7 @@
 		\end{tikzpicture}
 		\end{visibleenv}
 	\end{wide}
-	\begin{modal}<4|handout:2>
+	\begin{modal}<4|handout:3>
 		\begin{quote}
 			In Haskell, types provide a pretty good explanation of what a function does. Good luck deciphering lens types.
 		\end{quote}\par
@@ -903,9 +903,9 @@ data Entry = Entry {
 
 		§\onslide<21->§[1..5] & §\onslide<19->§traverse §\onslide<18->§+~§\onslide<20->§ 1 §\onslide<22->\ergo~\texttt{[2,3,4,5,6]}§
 	\end{haskell}\onslide<1->
-	\begin{modal}<6|handout:2>
+	\mode<beamer>{\begin{modal}<6>
 		\scalebox{0.9}{\usebox\wwm}
-	\end{modal}
+	\end{modal}}
 	% \begin{modal}<2|handout:2>[Folds]
 	% 	\begin{center}
 	% 	\begin{tabular}{lll}
