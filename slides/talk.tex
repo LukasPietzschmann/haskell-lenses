@@ -961,12 +961,11 @@ data Lens s a = Lens {
 	\end{haskell}\bigskip
 	\onslide<9->Huh?! What's that? I would've expected \texttt{["Hello", "there"]}.\par
 	\onslide<10->When viewing the result of \h{traverse}, it gets shoved through
-	\h{mappend} first. \onslide<11->That's why you typically use traversal's own view-operator
-	\h{^..}.
+	\h{mappend} first. \onslide<11->That's why you typically \h{^..}.
 	% allOf (traverse . _2) even [(1,2),(3,4)] §\ergo~\texttt{True}§
 	\begin{haskell}
 		§\onslide<14->§[1..5] §\onslide<12->§^..§\onslide<13->§ traverse §\onslide<15->\ergo~\texttt{[1,2,3,4,5]}§
-		§\onslide<16->§[(1,2),(3,4)] ^.. traverse . _2 §\onslide<17->\ergo~\texttt{[1,3]}§
+		§\onslide<16->§[(1,2),(3,4)] ^.. traverse . _2 §\onslide<17->\ergo~\texttt{[2,4]}§
 
 		§\onslide<21->§[1..5] & §\onslide<19->§traverse §\onslide<18->§+~§\onslide<20->§ 1 §\onslide<22->\ergo~\texttt{[2,3,4,5,6]}§
 	\end{haskell}\onslide<1->
@@ -1046,28 +1045,22 @@ data Lens s a = Lens {
 		\begin{tikzpicture}
 			\node (L) {\card{Lens}{\begin{itemize}
 				\item Focus on a single part of a data structure
-				\item Can be viewed with \hn{^.}
+				\item \hn{^.} returns the focused part directly
 			\end{itemize}}};
 			\node[right=of L] (P) {\card{Prism}{\begin{itemize}
 				\item Focus on a single part that may not exist
-				\item Can be viewed with \hn{^?}
+				\item \hn{^?} returns the focused part inside a \hn{Maybe}
 			\end{itemize}}};
 			\coordinate (A) at ($(L)!.5!(P)$);
 			\coordinate (M) at (A |- L.north);
 			\node[above=of M] (T) {\card{Traversals}{\begin{itemize}
 				\item Focus on multiple parts (also zero) of a data structure
-				\item Should be viewed with \hn{^..}
+				\item \hn{^..} returns list of the focused parts
 			\end{itemize}}};
 			\draw[v] (L) to (T);
 			\draw[v] (P) to (T);
 		\end{tikzpicture}
 	\end{wide}
-	% ^. for lens
-	% ^? for prism
-	% ^.. for traversal
-	% lens one element
-	% prism maybe element
-	% traversal many elements
 \end{frame}
 
 \definecolor{dblue}{HTML}{000742}
