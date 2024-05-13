@@ -31,7 +31,7 @@ getEntry :: String -> File -> Entry
 getEntry k = head . filter ((==) k . key) . entries
 
 getCurrentValue :: Entry -> String
-getCurrentValue = def . value
+getCurrentValue = curr . value
 
 setCurrentValue :: String -> Entry -> Entry
 setCurrentValue newValue entry = entry {

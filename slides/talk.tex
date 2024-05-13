@@ -45,7 +45,7 @@
 	UprightFont={*-Regular},
 ]{Fira Code}
 
-\usepackage[duration=90]{pdfpc}
+\usepackage[duration=90,defaulttransition=fade,enduserslide=43]{pdfpc}
 \newcommand<>{\talknote}[1]{\only#2{\pdfpcnote{- #1}\relax}}
 
 \def\link #1 to #2;{\def\ULdepth{.5pt}\def\ULthickness{.1pt}\uline{\href{#2}{#1}}}
@@ -124,8 +124,6 @@
 \begin{document}
 \maketitle
 
-\section{What}
-
 \makeatletter
 \newcommand*{\rom}[1]{\expandafter\@slowromancap\romannumeral #1@}
 \makeatother
@@ -139,7 +137,7 @@
 		\draw[draw=red,lcr,line width=1ex,visible on=<#1>] (F.south west) -- (F.north east);
 	\end{scope}\fi
 \end{tikzpicture}\par\bigskip\end{visibleenv}}
-\begin{frame}
+\begin{frame}[wide]
 	\frametitle{Learning Objectives}
 	\begin{wide}
 	\begin{multicols}{2}
@@ -154,6 +152,8 @@
 	\end{multicols}
 	\end{wide}
 \end{frame}
+
+\section{What}
 
 \colorlet{m}{blue!45!black}
 \tikzset{q/.style={chamfered rectangle,draw,lw,chamfered rectangle xsep=2cm,fill=m,text=white}}
@@ -183,16 +183,16 @@
 			\node[qa,below=of A,muted on=<3-|handout:2->] (C) {\scriptsize\qn{C:} A framework for building UIs};
 			\node[qa,below=of B,muted on=<3-|handout:2->] (D) {\scriptsize\qn{D:} A package for simulating optical lenses};
 
-			\draw[lw,short=-1pt] (A.east) to (B.west);
-			\draw[lw,short=-1pt] (C.east) to (D.west);
+			\draw[lw,short=-1pt,muted on=<3-|handout:2->] (A.east) to (B.west);
+			\draw[lw,short=-1pt,muted on=<3-|handout:2->] (C.east) to (D.west);
 
 			\draw[lw,short=-1pt] (Q.west) to (Q.west -| current page.west);
 			\draw[lw,short=-1pt] (Q.east) to (Q.east -| current page.east);
 
-			\draw[lw,short=-1pt] (A.west) to (A.west -| current page.west);
-			\draw[lw,short=-1pt] (C.west) to (C.west -| current page.west);
-			\draw[lw,short=-1pt] (B.east) to (B.east -| current page.east);
-			\draw[lw,short=-1pt] (D.east) to (D.east -| current page.east);
+			\draw[lw,short=-1pt,muted on=<3-|handout:2->] (A.west) to (A.west -| current page.west);
+			\draw[lw,short=-1pt,muted on=<3-|handout:2->] (C.west) to (C.west -| current page.west);
+			\draw[lw,short=-1pt,muted on=<3-|handout:2->] (B.east) to (B.east -| current page.east);
+			\draw[lw,short=-1pt,muted on=<3-|handout:2->] (D.east) to (D.east -| current page.east);
 		\end{tikzpicture}
 		\end{visibleenv}
 	\end{wide}
@@ -235,13 +235,13 @@ data File = File {
   name    :: String,
   entries :: [Entry]
 }
-data Value = Value {
-  curr :: String,
-  def  :: String
-}
-data Entry = Entry {
+§\onslide<4->§data Entry = Entry {
   key   :: String,
   value :: Value
+}
+§\onslide<5->§data Value = Value {
+  curr :: String,
+  def  :: String
 }
 	\end{haskell}
 \end{frame}
@@ -263,7 +263,7 @@ data Entry = Entry {
 		§\onslide<6->§getEntry k = §\onslide<5->§head . §\onslide<4->§filter ((==) k . key) . §\onslide<3->§entries
 
 		§\onslide<7->§getCurrentValue :: Entry -> String
-		§\onslide<10->§getCurrentValue = §\onslide<9->§def . §\onslide<8->§value
+		§\onslide<10->§getCurrentValue = §\onslide<9->§curr . §\onslide<8->§value
 
 		§\onslide<11->§setCurrentValue :: String -> Entry -> Entry
 		§\onslide<12->§setCurrentValue newValue entry = entry {
@@ -335,7 +335,7 @@ data Entry = Entry {
 		§\onslide<3->§}
 	\end{xshaskell}\medskip
 
-	\onslide<6->We need to \enquote{reimplement} the function composition:
+	\onslide<6->We need to reimplement the function composition:
 	\begin{xshaskell}
 		§\onslide<7->§compose :: Lens a b -> Lens b c -> Lens a c
 		§\onslide<8->§compose (Lens g m) (Lens g' m') = Lens {
@@ -372,7 +372,25 @@ data Entry = Entry {
 	\end{xshaskell}
 	\onslide<1->\begin{tikzpicture}[o]
 		\node[anchor=west,xshift=2mm,rnd,fill=gray!20,shadow] at (current page.west) (A) {
-			\inputhsxxs examples/example.hs from 1 to 12;
+			\begin{xxshaskell}
+data File = File {
+  name    :: String,
+  entries :: [Entry]
+}
+data Entry = Entry {
+  key   :: String,
+  value :: Value
+}
+data Value = Value {
+  curr :: String,
+  def  :: String
+}
+data Lens s a = Lens {
+  get :: s -> a,
+  modify ::
+    (a->a) -> s -> s
+}
+			\end{xxshaskell}
 		};
 	\end{tikzpicture}
 \end{frame}
@@ -389,10 +407,10 @@ data Entry = Entry {
 	\end{haskell}
 \end{frame}
 
-\begin{frame}
-	\frametitle{Let's reinvent the lens}
-	\color{red}\bfseries Play GHC and evaluate an expression step by step
-\end{frame}
+% \begin{frame}
+% 	\frametitle{Let's reinvent the lens}
+% 	\color{red}\bfseries Play GHC and evaluate an expression step by step
+% \end{frame}
 
 \begin{frame}[fragile]
 	\frametitle{Let's reinvent the lens}
@@ -519,8 +537,8 @@ data Entry = Entry {
 	\frametitle{A little Overview}
 	\onslide<2->Lenses basically provide two kinds of operations:
 	\begin{itemize}[<+(2)->]
-		\item \hn{view :: Lens' a b -> a -> b}
-		\item \hn{set :: Lens' a b -> b -> a -> a}
+		\item \hn{view :: Lens' s a -> s -> a}
+		\item \hn{set :: Lens' s a -> a -> s -> s}
 	\end{itemize}\medskip\onslide<5->
 	To use them, we need the actual lens. It determines what part of the structure
 	we want to focus on.
@@ -547,7 +565,7 @@ data Entry = Entry {
 	\begin{enumerate}[<+(2)->]
 		\item Get-Put
 		\item Put-Get
-		\item Put-Put
+		\item[\emoji{hatching-chick}] Put-Put
 	\end{enumerate}
 	\onslide<6->We'll look at them in a bit more detail.
 \end{frame}
@@ -557,9 +575,9 @@ data Entry = Entry {
 	\onslide<2->If you modify something by changing its subpart to exactly what it was before,
 	nothing should happen.\bigskip
 	\onslide<3->\begin{haskell}
-		set entryCurrentValueL (get entryCurrentValueL entry) entry == entry
+		set entryValueL (get entryValueL entry) entry == entry
 	\end{haskell}\bigskip
-	\onslide<4->\ergo{} Our lens should not modify the value or structure by itself.
+	\onslide<4->\ergo{} The lens should not modify the value or structure by itself.
 \end{frame}
 
 \begin{frame}[fragile]
@@ -567,9 +585,9 @@ data Entry = Entry {
 	\onslide<2->If you modify something by inserting a particular subpart and then view the result,
 	you'll get back exactly that subpart.\bigskip
 	\onslide<3->\begin{haskell}
-		get entryCurrentValueL (set entryCurrentValueL "a" entry) == "a"
+		get entryValueL (set entryValueL v entry) == v
 	\end{haskell}\bigskip
-	\onslide<4->\ergo{} The Lens should perform the update.
+	\onslide<4->\ergo{} Setting values should be independent of any previous state.
 \end{frame}
 
 \begin{frame}[fragile]
@@ -578,7 +596,7 @@ data Entry = Entry {
 	again inserting a different subpart \h{b}, it's exactly as if you only did the
 	second insertion.\bigskip
 	\onslide<3->\begin{haskell}
-		set entryCurrentValueL "b" (set entryCurrentValueL "a" entry) == set entryCurrentValueL "b" entry
+		set entryValueL v2 (set entryValueL v1 entry) == set entryValueL v2 entry = 1
 	\end{haskell}\bigskip
 	\onslide<4->\ergo{} Previous updates should not leave any traces.
 \end{frame}
@@ -774,21 +792,70 @@ data Entry = Entry {
 
 \begin{frame}[fragile]
 	\frametitle[Getter + Setter]{The lens Package}
-	\color{red}\textbf{Redo this: \url{https://vrom911.github.io/blog/write-yourself-a-lens}}
-	Having a separate Getter and Setter is not always desirable. Now, we want to create
+	\onslide<2->Having a separate Getter and Setter is not always desirable. Now, we want to create
 	our own lens that we can use as both Getter and Setter. This time, \h{makeLenses}
 	doesn't count!\par\bigskip
 	\begin{itemize}\setlength\itemsep{10pt}
-		\item We can use \h{lens} to combine a Getter and Setter into a lens
+		\item<3-> We can use \h{lens} to combine a viewing and setting function
 			\begin{haskell}
-				g = to snd
-				s = setting (\f (x,y) -> (x,f y))
-				_2 = lens g s
+				§\onslide<4->§g = snd
+				§\onslide<5->§s = (\(a,_) b -> (a,b))
+				§\onslide<6->§_2 = lens g s
 			\end{haskell}
-		\item You can also simply write a custom function with the type \h{l :: forall
+		\item<7-> You can also simply write a custom function with the type \h{l :: forall
 			f. Functor f => (a -> f b) -> s -> f t} that satisfies all three lens laws.
-			Good luck!
+			Good luck! \onslide<8->We'll try it anyway.
 	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle[How \texttt{lens} works~\cite{writelens}]{The lens Package}
+	\begin{wide}
+	\begin{haskell}
+		§\onslide<2->§type Lens s t a b = forall f. Functor f => (a -> f b) -> s -> f t
+		§\onslide<3->§type Lens' §\m{lensss}§s§\m{lensse}§ §\m{lenses}§a§\m{lensee}§ = Lens s s a a
+	\end{haskell}\ul<4->{gray}{lensss}{lensse}{s}\ul<5->{gray}{lenses}{lensee}{a}
+	\begin{tikzpicture}[o]
+		\node[yshift=-1cm,xshift=5mm,anchor=west,visible on=<4->] at (a) (S) {The type of the whole structure};
+		\node[yshift=-5mm,xshift=5mm,anchor=west,visible on=<5->] at (a) (A) {The inner type we're interested in};
+		\draw[textarrow,rnd,shorten >=-.2mm,visible on=<4->] (S) -| (s);
+		\draw[textarrow,rnd,shorten >=-.2mm,visible on=<5->] (A) -| (a);
+	\end{tikzpicture}\bigskip\onslide<6->
+	\begin{haskell}
+		lens :: Functor f => (s->a) -> (s->a->s) -> (a->f a) -> s -> f s
+		lens get set f s = ...
+	\end{haskell}\bigskip
+	\begin{itemize}
+		\item<7-> We need to get from \h{s -> a} and \h{s -> a -> s} to \h{f s}
+		\item<8-> We can get an \h{a} from our getter: \h{get s}
+		\item<9-> With \h{a} and \h{f} we can make an \h{f a}: \h{f $ get s}
+	\end{itemize}
+	\end{wide}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle[How \texttt{lens} works~\cite{writelens}]{The lens Package}
+	\begin{wide}
+	\begin{haskell}
+		lens :: Functor f => (s->a) -> (s->a->s) -> (a->f a) -> s -> f s
+		lens get set f s = §\alt<5>{set s <\$> f (get s)}{...}§
+	\end{haskell}\bigskip
+	\begin{itemize}
+		\item We need to get from \h{s -> a} and \h{s -> a -> s} to \h{f s}
+		\item We can get an \h{a} from our getter: \h{get s}
+		\item With \h{a} and \h{f} we can make an \h{f a}: \h{f $ get s}
+		\item<2-> Now, to get an \h{f s}, we an simply use
+			\begin{haskell}
+				fmap :: Functor f => §\m{ffs}§(a -> b)§\m{ffe}§ -> §\m{fxs}§f a§\m{fxe}§ -> f b
+			\end{haskell}\ul<3->{gray}{ffs}{ffe}{f}\ul<4->{gray}{fxs}{fxe}{x}
+	\end{itemize}
+		\begin{tikzpicture}[o]
+			\node[yshift=-9mm,xshift=-3mm,visible on=<3->] at (f) (F) {\hn{set s}};
+			\node[yshift=-9mm,xshift=3mm,visible on=<4->] at (x) (X) {\hn{f $ get s}};
+			\draw[textarrow,shorten >=-.2mm,shorten <=0mm,visible on=<3->] (F) to (f);
+			\draw[textarrow,shorten >=-.2mm,shorten <=-0.5mm,visible on=<4->] (X) to (x);
+		\end{tikzpicture}
+	\end{wide}
 \end{frame}
 
 \section{More Goodies}
