@@ -6,8 +6,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\RequirePackage{xcolor}
+\definecolor{dred}{HTML}{501613}
 
-\RequirePackage[color,coloraccent=red,tikz,listings,footnote]{smile}
+\RequirePackage[color,coloraccent=dred,tikz,listings,footnote]{smile}
 \RequirePackage{microtype}
 \RequirePackage{etoolbox}
 \RequirePackage[english]{babel}
@@ -72,7 +74,6 @@
 \setkomafont{subsection}{\large\mdseries}
 \newkomafont{topic}{\normalsize\slshape}
 \newkomafont{institute}{\footnotesize\slshape}
-\newkomafont{uni}{\footnotesize\slshape}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -80,7 +81,6 @@
 
 \ensureinfocommand{email}
 \ensureinfocommand{institute}
-\ensureinfocommand{uni}
 \ensureinfocommand{sheet}
 \ensureinfocommand{topic}
 \ensureinfocommand{date}
@@ -94,17 +94,17 @@
 
 \def\maketitle{%
 	\vspace*{\dimexpr-\headheight-2.33\baselineskip}
-		\begin{minipage}[c]{0.5\linewidth}
+		\begin{minipage}[c]{.6\linewidth}
 			{\usekomafont{title}\@title}\medskip\par
 			{\usekomafont{author}\href{mailto:\@email}{\@author}}\vskip-.1\baselineskip\par
-			{\usekomafont{uni}\@uni~-~\usekomafont{institute}\@institute}\par
+			{\usekomafont{institute}\@institute}\par
 		\end{minipage}
 	\hfill\savebox0{\resizebox*{!}{3\baselineskip}{\uulmlogo}}
 	\raisebox{1.33pt}{\parbox{\wd0}{\box0}}
 	\vspace{3em}
 	\hrule
 	\vspace{3em}
-	{\usekomafont{title}\scshape\color{red}{Sheet~\@sheet}:~}
+	{\usekomafont{title}\scshape\color{accent}{Sheet~\@sheet}:~}
 	{\usekomafont{title}\@topic}
 	\hfill
 	{\color{darkgray}\@date}
@@ -130,7 +130,7 @@
 }{\par}
 
 \newcommand*{\uulmlogo}[0]{%
-	\begin{tikzpicture}[yscale=-1, every path/.style={fill=black, even odd rule}]
+	\scalebox{.8}{\begin{tikzpicture}[yscale=-1, every path/.style={fill=black, even odd rule}]
 		\path (152.1,29.3)--(141.0,29.3)--(141.0,50.2)..controls
 		(141.0,55.7) and (139.3,64.4)..(131.2,64.4)..controls
 		(124.1,64.4) and (124.0,57.3)..(124.0,52.1)--
@@ -673,5 +673,5 @@
 		.. controls(9.0,24.6) and (10.2,24.3)..(11.0,23)..
 		controls(11.7,21.7) and (11.4,20.6)..(10.0,19.7)--
 		(6.9,18)--cycle;
-	\end{tikzpicture}
+	\end{tikzpicture}}
 }
