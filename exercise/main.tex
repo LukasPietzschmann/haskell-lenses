@@ -166,14 +166,13 @@ example = FileSystem $ Folder "root" [
 		them.
 
 		Imagine, you want to modify the contents of a specific file, but you don't know
-		it's index and exact path. The only thing you know is its name.\footnote{While
-		this is obviously not true in practice, we will assume that file names are
-		unique in our filesystem.} After the following tasks, you (hopefully) will have
-		written a function, that takes a file name and focuses on that exact file.
+		it's index and exact path. The only thing you know is its name. After the
+		following tasks, you will have written a function, that takes a file name and
+		focuses on that exact file.
 		\begin{tasks}[resume*]
 			\item To get into the right mood, forget lenses for a moment. Let's start by
 				writing a plain old Haskell function \h{searchFile :: String -> [Document]
-				-> Maybe Document} using \h{filter}. For now, we assume that any input to
+				-> [Document]} using \h{filter}. For now, we assume that any input to
 				this function is a list with one layer of documents:
 				\begin{haskell}
 example = [
@@ -188,7 +187,7 @@ example = [
 		traversable, but this operator also works on \h{Fold}s!
 		\begin{tasks}[resume*]
 			\item Implement an instance of \h{Foldable} for \h{File} that folds over all
-				documents in the file hierarchy no matter the depth.
+				documents in the file hierarchy, no matter the depth.
 		\end{tasks}
 		Awesome! Now we can use the \link\h{folded} to
 		https://hackage.haskell.org/package/lens-5.3.1/docs/Control-Lens-Combinators.html\#v:folded;
@@ -203,21 +202,32 @@ example = [
 			\item Look through \link Control.Lens.Fold to https://hackage.haskell.org/package/lens-5.3.1/docs/Control-Lens-Fold.html;
 				and search for a function that can be composed with a \h{Fold} and be
 				used for filtering.
-			\item Now use this function like the \h{filter} from task \emph{e)} and
-				compose it with \h{folded} to implement \h{find :: String -> --
-				complicated return type}.
-		\end{tasks}
-		Great, we can now write code like this:
-		\begin{haskell}
-example ^.. find ".zshenv" . content
+			\item Now use this function like the \h{filter} from task \emph{e)}, so we
+				can use our \h{find} function like this:
+				\begin{haskell}
+example ^.. folded . find ".zshenv" . content
 -- ["export EDITOR=nvim"]
-		\end{haskell}
-		By the way, this would also work if our filesystem would contain multiple files
-		with the same name. But since we assumed that this is not the case, we can also
-		use \h{^?} to get a single \h{Maybe} instead of a list.
+				\end{haskell}
+		\end{tasks}
+		By the way, if we are sure that there will be at maximum a single file with this
+		name, we can also use \h{^?} to get a \h{Maybe} instead of a list.
 		\begin{haskell}
-example ^? find ".zshenv" . metadata . author
+example ^? folded . find ".zshenv" . metadata . author
 -- Just "Luke"
 		\end{haskell}
+		\begin{tasks}[resume*]
+		\item With this new superpower unlocked, write \h{filesFromAuthor} in the same
+			way to focus on all files from a specific author.
+			\begin{haskell}
+example ^.. folded . filesFromAuthor "Luke" . metadata . title
+-- [".zshenv",".zsh_history"]
+			\end{haskell}
+		\item Last but not least, implement \h{filesWithAuthor} to search for files with
+			a specific author and name.
+			\begin{haskell}
+example ^?! folded . filesWithAuthor ".zshenv" "Luke" . metadata . title
+-- ".zshenv"
+			\end{haskell}
+		\end{tasks}
 	\end{exercise}
 \end{document}

@@ -94,10 +94,8 @@ instance Monoid Metadata where
 -- e)
 p :: String -> Document -> Bool
 p s (Doc _ m _) = _title m == s
-searchFile :: String -> [Document] -> Maybe Document
-searchFile s fs = case filter (p s) fs of
-    [] -> Nothing
-    (x:_) -> Just x
+searchFile :: String -> [Document] -> [Document]
+searchFile = filter . p
 -- f)
 instance Foldable File where
   foldMap :: Monoid m => (a -> m) -> File a -> m
@@ -106,4 +104,9 @@ instance Foldable File where
 -- g)
 -- Nice, there's folded :)
 -- h)
-find s = folded . filtered (p s)
+find :: (Choice p, Applicative f) => String -> Optic' p f Document Document
+find = filtered . p
+-- i)
+filesFromAuthor a = filtered (\(Doc _ (Metadata _ author) _) -> author == a)
+-- j)
+filesWithAuthor f a = find f . filesFromAuthor a
