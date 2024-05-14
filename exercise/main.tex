@@ -16,6 +16,15 @@
 	UprightFont={*-Regular},
 ]{Fira Code}
 
+\makeatletter
+\usepackage{fontawesome5}
+\def\ergo{\smile@lst@style@comment\raisebox{.1pt}{\scalebox{.8}{\faCaretRight}}}
+\makeatother
+
+\usepackage[verbatim]{lstfiracode}
+\lstdefinestyle{firastyleb}{style=FiraCodeStyle,style=smile@lst@base}
+\lstset{style=firastyleb}
+
 \newcommand\h[2][]{\lstinline[language=haskell,#1]{#2}}
 \lstnewenvironment{haskell}{\lstset{language=haskell}}{}
 
@@ -183,7 +192,7 @@ searchFiles ".zshenv" [
   Doc Text (Metadata ".zshenv" "luke") "export EDITOR=nvim",
   Doc Text (Metadata ".zsh_history" "luke") "sudo dnf rm java"
 ]
--- Doc Text (Metadata ".zshenv" "luke") "export EDITOR=nvim"
+§\ergo{} Doc Text (Metadata ".zshenv" "luke") "export EDITOR=nvim"§
 				\end{haskell}
 		\end{tasks}
 		Now, we need a way to handle arbitrary nesting depths. We can tackle this by
@@ -226,27 +235,27 @@ searchFiles ".zshenv" [
 				we can implement \h{searchFiles''} and make it work like this:
 				\begin{haskell}
 example ^.. folded . searchFiles'' ".zshenv" . content
--- ["", "export EDITOR=nvim"]
+§\ergo{} ["", "export EDITOR=nvim"]§
 				\end{haskell}
 		\end{tasks}
 		By the way, if we are sure that there will be at maximum a single file with this
 		name, we can also use \h{^?} to get a \h{Maybe} instead of a list.
 		\begin{haskell}
 example ^? folded . searchFiles'' ".zsh_history" . metadata . author
--- Just "Luke"
+§\ergo{} Just "Luke"§
 		\end{haskell}
 		\begin{tasks}[resume*]
 		\item With this new superpower unlocked, implement \h{searchAuthor} in the same
 			way to focus on all files from a specific author.
 			\begin{haskell}
 example ^.. folded . searchAuthor "luke" . metadata . title
--- [".zshenv",".zsh_history"]
+§\ergo{} [".zshenv",".zsh\_history"]§
 			\end{haskell}
 		\item Last but not least, implement \h{filesWithAuthor} to search for files with
 			a specific author and name.
 			\begin{haskell}
 example ^?! folded . filesWithAuthor ".zshenv" "luke" . content
--- ""
+§\ergo{} ""§
 			\end{haskell}
 		\end{tasks}
 	\end{exercise}
