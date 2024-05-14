@@ -72,7 +72,7 @@
 				https://hackage.haskell.org/package/lens-5.2.3/docs/Control-Lens-Getter.html\#v:like;
 				to be defined here, but you'll also find the \link\texttt{view} to
 				https://hackage.haskell.org/package/lens-5.2.3/docs/Control-Lens-Getter.html\#v:view;
-				function and it's corresponding \link operator to
+				function and its corresponding \link operator to
 				https://hackage.haskell.org/package/lens-5.2.3/docs/Control-Lens-Getter.html\#v:-94-.;
 				there.
 			\item[Control.Lens.Setter] Analogous to the \texttt{Getter} module, you can
@@ -88,7 +88,7 @@
 				Prisms to
 				https://hackage.haskell.org/package/lens-5.2.3/docs/Control-Lens-Prism.html\#g:4;.
 			\item[Control.Lens.Traversal] Basically, we only used two functions from
-				here; \link\texttt{traverse} to
+				here: \link\texttt{traverse} to
 				https://hackage.haskell.org/package/lens-5.2.3/docs/Control-Lens-Traversal.html\#v:traverse;,
 				and \link\texttt{over} to
 				https://hackage.haskell.org/package/lens-5.2.3/docs/Control-Lens-Traversal.html\#v:over;.
@@ -123,7 +123,7 @@
 	\begin{exercise}{Getting familiar with lenses}
 		Let's start easy by composing some lenses and accessing and changing values.
 		\begin{tasks}
-			\item Combine multiple different lenses to form a new one, that focuses on
+			\item Combine multiple different lenses to form a new one that focuses on
 				the string \h{"Hi"} inside \h{(1, ("Hi", "Ho"), 2)}.
 			\item Now, use this lens to retrieve the focused part. Try both the operator
 				and function for this.
@@ -165,7 +165,7 @@ example = Folder "root" [
   ]
 		\end{haskell}
 		\begin{tasks}[resume*]
-			\item Without evaluating it, try to determine what the expression \h{example ^.
+			\item Without evaluating it, determine what the expression \h{example ^.
 				_File . metadata} would evaluate to?
 			\item If you have not figured out the previous task: it does not evaluate to
 				anything, as there's a type error. Implement a fix for it, without
@@ -178,7 +178,7 @@ example = Folder "root" [
 		introduce you to them.
 
 		Imagine, you want to modify the contents of a specific file, but you don't know
-		it's exact path. The only thing you know is its name. After the following tasks,
+		its exact path. The only thing you know is its name. After the following tasks,
 		you will have written functions that can focus on a specific file, no matter
 		its index in the list.
 		\begin{tasks}[resume*]
@@ -208,7 +208,7 @@ searchFiles ".zshenv" [
 			\node[shift={(-20mm,1mm)}] at (pic cs:op1) {\color{gray}Optional};
 			\node[shift={(-20mm,1mm)}] at (pic cs:op2) {\color{gray}Optional};
 		\end{tikzpicture}%
-		Now its lens time! The cool thing with lenses is, that we don't need to do the
+		Now it's lens time! The cool thing with lenses is, that we don't need to do the
 		flattening explicitly. You already know that \h{^..} gives us a flat list of all
 		targets of a traversable. So providing a \h{Traversable} instance for \h{File}
 		should do the trick. But a \h{Traversal} also needs to be a \h{Functor} and
@@ -260,7 +260,7 @@ example ^?! folded . filesWithAuthor ".zshenv" "luke" . content
 		\end{tasks}
 	\end{exercise}
 
-	\begin{exercise}{Respekt, wer's selber macht}
+	\begin{exercise}{Reinventing the wheel}
 		In this exercise we want to reimplement some common library function to get a
 		better understanding of how they work.
 
@@ -291,7 +291,7 @@ example ^?! folded . filesWithAuthor ".zshenv" "luke" . content
 			\end{haskell}
 		\item The last set-like operator you want to reimplement is \h{*~}. It
 			multiplies the lense's target by a given value, and --- you already guessed
-			it --- also used the \h{Identity} functor. Here's its typesignature:
+			it --- also used the \h{Identity} functor. Here's its signature:
 			\begin{haskell}
 				(*~.) :: Num a => ((a -> Identity a) -> s -> Identity t) -> a -> s -> t
 			\end{haskell}
