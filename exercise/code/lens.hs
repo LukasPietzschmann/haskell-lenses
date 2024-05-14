@@ -72,10 +72,11 @@ author = lens (\(Metadata _ a ) -> a) (\(Metadata t _) a -> Metadata t a)
 -- b)
 example :: File Document
 example = Folder "root" [
+    File $ Doc Text (Metadata ".zshenv" "root") "",
     Folder "home" [
         Folder "luke" [
-            File $ Doc Text (Metadata ".zshenv" "Luke") "export EDITOR=nvim",
-            File $ Doc Text (Metadata ".zsh_history" "Luke") "dnf rm java"
+            File $ Doc Text (Metadata ".zshenv" "luke") "export EDITOR=nvim",
+            File $ Doc Text (Metadata ".zsh_history" "luke") "sudo dnf rm java"
           ]
       ]
   ]
@@ -94,22 +95,30 @@ instance Monoid Metadata where
 -- e)
 p :: String -> Document -> Bool
 p s (Doc _ m _) = _title m == s
-searchFile :: String -> [Document] -> [Document]
-searchFile = filter . p
+searchFiles :: String -> [Document] -> [Document]
+searchFiles = filter . p
 -- f)
+flattenFolders :: File Document -> [Document]
+flattenFolders (Folder _ fs) = concatMap flattenFolders fs
+flattenFolders (File doc) = [doc]
+-- g)
+searchFiles' :: String -> File Document -> [Document]
+searchFiles' s = searchFiles s . flattenFolders
+
+-- h)
 instance Foldable File where
   foldMap :: Monoid m => (a -> m) -> File a -> m
   foldMap f (Folder _ fs) = foldMap (foldMap f) fs
   foldMap f (File doc) = f doc
--- g)
--- Nice, there's folded :)
--- h)
-find :: (Choice p, Applicative f) => String -> Optic' p f Document Document
-find = filtered . p
 -- i)
-filesFromAuthor a = filtered (\(Doc _ (Metadata _ author) _) -> author == a)
+-- Nice, there's folded :)
 -- j)
-filesWithAuthor f a = find f . filesFromAuthor a
+searchFiles'' :: (Choice p, Applicative f) => String -> Optic' p f Document Document
+searchFiles'' = filtered . p
+-- k)
+searchAuthor a = filtered (\(Doc _ (Metadata _ author) _) -> author == a)
+-- l)
+filesWithAuthor f a = searchFiles'' f . searchAuthor a
 
 
 
