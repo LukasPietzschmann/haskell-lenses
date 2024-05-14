@@ -21,7 +21,7 @@
 
 \RequirePackage[inline]{enumitem}
 \newlist{tasks}{enumerate}{1}
-\setlist[tasks, 1]{label=\itshape\alph*)~, midpenalty=-1000}
+\setlist[tasks, 1]{label=\itshape\alph*)~,beginpenalty=-100,midpenalty=0,endpenalty=-100}
 \setlist[itemize, 1]{label=$\bullet$}
 
 \RequirePackage[draft=false]{scrlayer-scrpage}
