@@ -229,4 +229,67 @@ example ^?! folded . filesWithAuthor ".zshenv" "Luke" . metadata . title
 			\end{haskell}
 		\end{tasks}
 	\end{exercise}
+
+	\begin{exercise}{Respekt, wer's selber macht}
+		In this exercise we want to reimplement some common library function to get a
+		better understanding of how they work.
+
+		You might remember our exploration of the \h{Lens} type from the lecture. Here's
+		a little refresher:
+		\begin{haskell}
+			type Lens s t a b = forall f. Functor f => (a -> f b) -> s -> f t
+		\end{haskell}
+		Depending on the operation performed on the lens, Haskell can select a fitting
+		functor automagically. The functor then carries out the operation.
+		\begin{tasks}
+		\item The operator \h{.~} uses the \h{Identity} functor, so it requires a lens
+			of type \h{(a -> Identity b) -> s -> Identity t}. Knowing this, implement
+			your own version of the operator, so it has the following type signature:
+			\begin{haskell}
+				(.~.) :: ((a -> Identity b) -> s -> Indentity t) -> b -> s -> t
+			\end{haskell}
+			It kinda looks like a person with a mustache, but upside down
+			\raisebox{1.2ex}{\rotatebox{180}{\emoji{disguised-face}}}. Your
+			implementation should behave identically to the operator from the lens
+			package.
+
+			If you're a bit rusty on how \h{Identity} works and how you get things out
+			of it, check out its \link documentation to
+			https://hackage.haskell.org/package/base-4.19.1.0/docs/Data-Functor-Identity.html\#t:Identity;.
+		\item Next, implement \h{\%~}. This operator behaves like \h{over}:
+			\begin{haskell}
+				(a,b,c) & _3 %~ f
+				-- (a,b,f c)
+			\end{haskell}
+			Your implementation should, again, behave like the predefined operator, and have the following
+			type signature:
+			\begin{haskell}
+				(%~.) :: ((a -> Identity b) -> s -> Identity t) -> (a -> b) -> s -> t
+			\end{haskell}
+		\item The last set-like operator we want to implement is \h{*~}. It multiplies the lense's target
+			by a given value:
+			\begin{haskell}
+				(1,2) & _1 *~ 4
+				-- (4,2)
+			\end{haskell}
+			You know the dill, here's the typesignature:
+			\begin{haskell}
+				(*~.) :: Num a => ((a -> Identity a) -> s -> Identity t) -> a -> s -> t
+			\end{haskell}
+		\end{tasks}
+		Set-like function are only one side of the coin. In the next task, we want to
+		reimplement \h{view}, or more precisely, the \h{^.} operator. Insead of the
+		\h{Identity} functor, it uses \h{Const}. Again, here's a link to its \link
+		documentation to
+		https://hackage.haskell.org/package/base-4.19.1.0/docs/Control-Applicative.html\#t:Const;,
+		so you can familiarize yourself with it. Operators using \h{Const}, take lenses
+		looking like this: \h{(a -> Const a b) -> s -> Const a t}.
+		\begin{tasks}[resume*]
+			\item Implement the view operator \h{^.} respecting the following type signature:
+				\begin{haskell}
+					(.^.) :: s -> ((a -> Const a b) -> s -> Const a t) -> a
+				\end{haskell}
+		\end{tasks}
+
+	\end{exercise}
 \end{document}

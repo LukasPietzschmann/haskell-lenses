@@ -110,3 +110,23 @@ find = filtered . p
 filesFromAuthor a = filtered (\(Doc _ (Metadata _ author) _) -> author == a)
 -- j)
 filesWithAuthor f a = find f . filesFromAuthor a
+
+
+
+-- | Exercise 3 | --
+-- a)
+infixr 4 .~.
+(.~.) :: ((a -> Identity b) -> s -> Identity t) -> b -> s -> t
+(.~.) f b s = runIdentity $ f (const $ Identity b) s
+-- b)
+infixr 4 %~.
+(%~.) :: ((a -> Identity b) -> s -> Identity t) -> (a -> b) -> s -> t
+(%~.) f g s = runIdentity $ f (Identity . g) s
+-- c)
+infixr 4 *~.
+(*~.) :: Num a => ((a -> Identity a) -> s -> Identity t) -> a -> s -> t
+(*~.) f a s = (%~.) f (*a) s
+-- d)
+infixr 4 .^.
+(.^.) :: s -> ((a -> Const a b) -> s -> Const a t) -> a
+(.^.) s f = getConst $ f Const s
