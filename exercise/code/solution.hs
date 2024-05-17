@@ -22,17 +22,13 @@ vc' = set l 42 v
 vd = vc & l *~ 11
 -- e)
 v' = (["Hi", "Ho"], ["He", "Hu"])
--- This type is like Lens' ([String], [String]) String" with f = Const String
-l' :: (String -> Const String String) -> ([String], [String]) -> Const String ([String], [String])
+l' :: Traversal' ([String], [String]) String
 l' = _1 . _head
 -- f)
--- This type is like Lens' ([String], [String]) String" with f = Const String
-l'' :: (String -> Const String String) -> ([String], [String]) -> Const String ([String], [String])
+l'' :: Traversal' ([String], [String]) String
 l'' = _1 . ix 0
 -- g)
--- This type is like Lens' ([String], [String]) String" but with an additional
--- Applicative constraint for "both".
-l''' :: Applicative f => (String -> f String) -> ([String], [String]) -> f ([String], [String])
+l''' :: Traversal' ([String], [String]) String
 l''' = both . _head
 -- h)
 vh = v' & l''' .~ "Boo"
@@ -94,7 +90,7 @@ instance Monoid Metadata where
 -- example ^.. _File . metadata
 -- e)
 p :: String -> Document -> Bool
-p s (Doc _ m _) = _title m == s
+p s d = d ^. metadata . title == s
 searchFiles :: String -> [Document] -> [Document]
 searchFiles = filter . p
 -- f)
@@ -116,7 +112,7 @@ instance Foldable File where
 searchFiles'' :: (Choice p, Applicative f) => String -> Optic' p f Document Document
 searchFiles'' = filtered . p
 -- k)
-searchAuthor a = filtered (\(Doc _ (Metadata _ author) _) -> author == a)
+searchAuthor a = filtered (\d -> d ^. metadata . author == a)
 -- l)
 filesWithAuthor f a = searchFiles'' f . searchAuthor a
 

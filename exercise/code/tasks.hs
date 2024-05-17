@@ -25,17 +25,14 @@ vc' = todo -- use function
 vd = todo
 -- e)
 v' = (["Hi", "Ho"], ["He", "Hu"])
--- This type is like Lens' ([String], [String]) String" with f = Const String
-l' :: (String -> Const String String) -> ([String], [String]) -> Const String ([String], [String])
+l' :: Traversal' ([String], [String]) String
 l' = todo
 -- f)
 -- This type is like Lens' ([String], [String]) String" with f = Const String
-l'' :: (String -> Const String String) -> ([String], [String]) -> Const String ([String], [String])
+l'' :: Traversal' ([String], [String]) String
 l'' = todo
 -- g)
--- This type is like Lens' ([String], [String]) String" but with an additional
--- Applicative constraint for "both".
-l''' :: Applicative f => (String -> f String) -> ([String], [String]) -> f ([String], [String])
+l''' :: Traversal' ([String], [String]) String
 l''' = todo
 -- h)
 vh = todo

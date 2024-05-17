@@ -192,7 +192,7 @@ searchFiles ".zshenv" [
   Doc Text (Metadata ".zshenv" "luke") "export EDITOR=nvim",
   Doc Text (Metadata ".zsh_history" "luke") "sudo dnf rm java"
 ]
-§\ergo{} Doc Text (Metadata ".zshenv" "luke") "export EDITOR=nvim"§
+§\ergo{} [Doc Text (Metadata ".zshenv" "luke") "export EDITOR=nvim"]§
 				\end{haskell}
 		\end{tasks}
 		Now, we need a way to handle arbitrary nesting depths. We can tackle this by
@@ -242,7 +242,7 @@ example ^.. folded . searchFiles'' ".zshenv" . content
 		name, we can also use \h{^?} to get a \h{Maybe} instead of a list.
 		\begin{haskell}
 example ^? folded . searchFiles'' ".zsh_history" . metadata . author
-§\ergo{} Just "Luke"§
+§\ergo{} Just "luke"§
 		\end{haskell}
 		\begin{tasks}[resume*]
 		\item With this new superpower unlocked, implement \h{searchAuthor} in the same
@@ -255,7 +255,7 @@ example ^.. folded . searchAuthor "luke" . metadata . title
 			a specific author and name.
 			\begin{haskell}
 example ^?! folded . filesWithAuthor ".zshenv" "luke" . content
-§\ergo{} ""§
+§\ergo{} "export EDITOR=nvim"§
 			\end{haskell}
 		\end{tasks}
 	\end{exercise}
