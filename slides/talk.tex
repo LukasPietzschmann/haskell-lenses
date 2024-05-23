@@ -890,16 +890,16 @@ data Lens s a = Lens {
 	rescue!\par\bigskip
 	\begin{haskell}
 §\onslide<3->§data CanteenMeal = MainCourse String CanteenMeal
-                 | Desert String
+                 | Dessert String
 
-§\onslide<4->§meal1 = MainCourse "Sattmacher" (Desert "Pudding")
-§\onslide<5->§meal2 = Desert "Yogurt"
+§\onslide<4->§meal1 = MainCourse "Sattmacher" (Dessert "Pudding")
+§\onslide<5->§meal2 = Dessert "Yogurt"
 
 §\onslide<8->§meal1 §\onslide<6->§^?§\onslide<7->§ _MainCourse . _2 . _Dessert §\onslide<9->\ergo~\texttt{Just "Pudding"}§
 §\onslide<10->§meal2 ^? _MainCourse . _2 . _Dessert §\onslide<11->\ergo~\texttt{Nothing}§
 
 §\onslide<15->§meal1 &  §\onslide<13->§_MainCourse . _2 . _Dessert §\onslide<12->§.~ §\onslide<14->§"Yogurt"
-§\onslide<16->\ergo~\texttt{Desert "Yogurt" \color{gray}inside meal1}§
+§\onslide<16->\ergo~\texttt{Dessert "Yogurt" \color{gray}inside meal1}§
 	\end{haskell}
 \end{frame}
 
